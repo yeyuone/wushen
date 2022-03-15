@@ -1,8 +1,8 @@
 var flagTiggerIsShow = true   //标识 目前状态:true精简列表  false(全部列表)
-
+var hidName = localStorage.getItem("hideTrigger") ? localStorage.getItem("hideTrigger").split(',') : [];
 
 document.getElementsByClassName("trigger")[0].onclick = () => {
-    let hidName = localStorage.getItem("hideTrigger") ? localStorage.getItem("hideTrigger").split(',') : [];
+    hidName = localStorage.getItem("hideTrigger") ? localStorage.getItem("hideTrigger").split(',') : [];
     let parNodes = document.getElementsByClassName("zdy-item")
     let changeButton = document.getElementById('wsmud_raid_left')
     changeButton.innerText = '全部列表'
@@ -59,13 +59,13 @@ document.getElementsByClassName("trigger")[0].onclick = () => {
 
 //二次绑定
 function triggerAcitonfunc(){
-    let hidName = localStorage.getItem("hideTrigger") ? localStorage.getItem("hideTrigger").split(',') : [];
+
     let parNodes = document.getElementsByClassName("zdy-item")
     let changeButton = document.getElementById('wsmud_raid_left')
     changeButton.innerText = flagTiggerIsShow === true?'精简列表':'全部列表'
     changeButton.style.color = 'red'
 
-    changeButton.onclick = () => {
+    document.getElementById('wsmud_raid_left').onclick = () => {
         if (flagTiggerIsShow ===false) {
             for (let i = 0; i < parNodes.length; i++) {
                 for (let j = 0; j < hidName.length; j++) {
@@ -74,8 +74,8 @@ function triggerAcitonfunc(){
                     }
                 }
             }
-            if (changeButton) {
-                changeButton.innerText = '精简列表'
+            if (document.getElementById('wsmud_raid_left')) {
+                document.getElementById('wsmud_raid_left').innerText = '精简列表'
                 flagTiggerIsShow = true
             }
         } else {
@@ -86,8 +86,8 @@ function triggerAcitonfunc(){
                     }
                 }
             }
-            if (changeButton) {
-                changeButton.innerText = '全部列表'
+            if (document.getElementById('wsmud_raid_left')) {
+                document.getElementById('wsmud_raid_left').innerText = '全部列表'
                 flagTiggerIsShow = false
             }
         }
