@@ -1,12 +1,14 @@
-//持续绑定事件
+var flagTiggerIsShow = true   //标识 目前状态:true精简列表  false(全部列表)
+
+
 document.getElementsByClassName("trigger")[0].onclick = () => {
     let hidName = localStorage.getItem("hideTrigger") ? localStorage.getItem("hideTrigger").split(',') : [];
+    let parNodes = document.getElementsByClassName("zdy-item")
     let changeButton = document.getElementById('wsmud_raid_left')
-    changeButton.innerText = '隐藏'
+    changeButton.innerText = '全部列表'
     changeButton.style.color = 'red'
     changeButton.onclick = () => {
-        if (document.getElementById('wsmud_raid_left').innerText == '隐藏') {
-            let parNodes = document.getElementsByClassName("zdy-item")
+        if (flagTiggerIsShow ===false) {
             for (let i = 0; i < parNodes.length; i++) {
                 for (let j = 0; j < hidName.length; j++) {
                     if (parNodes[i].childNodes[2] && parNodes[i].childNodes[2].innerText == hidName[j]) {
@@ -15,10 +17,10 @@ document.getElementsByClassName("trigger")[0].onclick = () => {
                 }
             }
             if (changeButton) {
-                changeButton.innerText = '显示'
+                changeButton.innerText = '精简列表'
+                flagTiggerIsShow = true
             }
         } else {
-            let parNodes = document.getElementsByClassName("zdy-item")
             for (let i = 0; i < parNodes.length; i++) {
                 for (let j = 0; j < hidName.length; j++) {
                     if (parNodes[i].childNodes[2] && parNodes[i].childNodes[2].innerText == hidName[j]) {
@@ -27,12 +29,12 @@ document.getElementsByClassName("trigger")[0].onclick = () => {
                 }
             }
             if (changeButton) {
-                changeButton.innerText = '隐藏'
+                changeButton.innerText = '全部列表'
+                flagTiggerIsShow = false
             }
         }
     }
-    if (document.getElementById('wsmud_raid_left').innerText == '隐藏') {
-        let parNodes = document.getElementsByClassName("zdy-item")
+    if (flagTiggerIsShow===true) {
         for (let i = 0; i < parNodes.length; i++) {
             for (let j = 0; j < hidName.length; j++) {
                 if (parNodes[i].childNodes[2] && parNodes[i].childNodes[2].innerText == hidName[j]) {
@@ -41,10 +43,80 @@ document.getElementsByClassName("trigger")[0].onclick = () => {
             }
         }
         if (changeButton) {
-            changeButton.innerText = '显示'
+            changeButton.innerText = '精简列表'
+        }
+    }
+    //为所有触发绑定点击,画面重绘
+    let triggerItems  = document.getElementsByClassName("breakText")
+    for (let i=0;i<triggerItems.length;i++){
+        triggerItems[i].onclick = ()=>{
+            triggerAcitonfunc()
         }
     }
 }
+
+
+
+//二次绑定
+function triggerAcitonfunc(){
+    let hidName = localStorage.getItem("hideTrigger") ? localStorage.getItem("hideTrigger").split(',') : [];
+    let parNodes = document.getElementsByClassName("zdy-item")
+    let changeButton = document.getElementById('wsmud_raid_left')
+    changeButton.innerText = flagTiggerIsShow === true?'精简列表':'全部列表'
+    changeButton.style.color = 'red'
+
+    changeButton.onclick = () => {
+        if (flagTiggerIsShow ===false) {
+            for (let i = 0; i < parNodes.length; i++) {
+                for (let j = 0; j < hidName.length; j++) {
+                    if (parNodes[i].childNodes[2] && parNodes[i].childNodes[2].innerText == hidName[j]) {
+                        parNodes[i].style.display = 'none'
+                    }
+                }
+            }
+            if (changeButton) {
+                changeButton.innerText = '精简列表'
+                flagTiggerIsShow = true
+            }
+        } else {
+            for (let i = 0; i < parNodes.length; i++) {
+                for (let j = 0; j < hidName.length; j++) {
+                    if (parNodes[i].childNodes[2] && parNodes[i].childNodes[2].innerText == hidName[j]) {
+                        parNodes[i].style.display = ''
+                    }
+                }
+            }
+            if (changeButton) {
+                changeButton.innerText = '全部列表'
+                flagTiggerIsShow = false
+            }
+        }
+    }
+    if (flagTiggerIsShow===true) {
+        for (let i = 0; i < parNodes.length; i++) {
+            for (let j = 0; j < hidName.length; j++) {
+                if (parNodes[i].childNodes[2] && parNodes[i].childNodes[2].innerText == hidName[j]) {
+                    parNodes[i].style.display = 'none'
+                }
+            }
+        }
+    }
+    //为所有触发绑定点击,画面重绘
+    let triggerItems  = document.getElementsByClassName("breakText")
+    for (let i=0;i<triggerItems.length;i++){
+        triggerItems[i].onclick = ()=>{
+            triggerAcitonfunc()
+        }
+    }
+}
+
+
+
+
+
+
+
+
 
 
 //添加按钮 添加弹窗
@@ -54,7 +126,7 @@ let boardSetButton = document.getElementsByClassName('boardSetButton')[0]
 document.getElementsByClassName('container')[0].insertAdjacentHTML("beforeend",
     '<div class="boardSet" style="z-index: 99999; position:absolute;height: 50%;margin: auto;width: 80%;background-color: white;bottom: 20%;left: 10%;flex-flow: column nowrap;display: flex;align-items: center;text-align: center;' +
     'border: 2px solid blue;display: none">' +
-    ' <h3>设置面板1.0 <span style="font-size: 10px">by 与風</span></h3>' +
+    ' <h3>设置面板1.1 <span style="font-size: 10px">by 与風</span></h3>' +
     '<p>请在下面输入要隐藏的触发名称,使用英文符号","分隔</p>' +
     '<textarea class="textHide" style="font-size:  16px;width: 50%" rows="5" ></textarea>' +
     '<div style="display: flex;justify-content:center;"><div class="readyAllButton" style="border: 1px solid greenyellow;margin-top:20px;right:20px;margin-right: 10px;width: 50px;line-height:30px;height: 30px;">确认</div>' +
@@ -76,6 +148,8 @@ document.getElementsByClassName('readyAllButton')[0].onclick = () => {
     localStorage.setItem("hideTrigger", document.getElementsByClassName('textHide')[0].value);
     document.getElementsByClassName('boardSet')[0].style.display = 'none'
 }
+
+
 
 
 //面板整体
