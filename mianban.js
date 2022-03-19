@@ -120,7 +120,7 @@ function triggerAcitonfunc(){
 
 
 //添加按钮 添加弹窗
-document.getElementsByClassName('raidToolbar')[0].insertAdjacentHTML("beforeend", '<span class="raid-item boardSetButton  glyphicon glyphicon-cog tool-icon"><hio>设置</hio></span>')
+document.getElementsByClassName('raidToolbar')[0].insertAdjacentHTML("beforeend", '<span class="raid-item boardSetButton"><hio>设置</hio></span>')
 let boardSetButton = document.getElementsByClassName('boardSetButton')[0]
 
 document.getElementsByClassName('container')[0].insertAdjacentHTML("beforeend",
