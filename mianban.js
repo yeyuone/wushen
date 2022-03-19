@@ -153,8 +153,18 @@ document.getElementsByClassName('readyAllButton')[0].onclick = () => {
 
 
 //面板整体
-//添加按钮
-document.getElementsByClassName("WG_button")[0].insertAdjacentHTML("beforeend", '<span style="color:red;borderColor:red" class="zdy-item boardButton">面板</span>');
+
+//添加面板按钮
+document.getElementsByClassName("right-bar")[0].insertAdjacentHTML("beforeend", '<span  class="tool-item boardButton" style="opacity: 1; color: deeppink"><span class="glyphicon glyphicon-cog  tool-icon">,</span> <span cass="tool-text">面板</span> </span>');
+//为按钮绑定隐藏
+document.getElementsByClassName('br-tool')[0].onclick = ()=>{
+    var dpy = document.getElementsByClassName("boardButton")[0].style
+    if(dpy.display=='none'){
+        dpy.display = ''
+    }else {
+        dpy.display = 'none'
+    }
+}
 //绑定事件, 点击后动画离开
 document.getElementsByClassName("raidToolbar")[0].style.cssText = "position: relative;bottom:0";
 document.getElementsByClassName("WG_log")[0].style.cssText = "position: relative;bottom:0";
