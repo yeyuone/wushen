@@ -155,13 +155,14 @@ document.getElementsByClassName('raidToolbar')[0].insertAdjacentHTML("beforeend"
 let boardSetButton = document.getElementsByClassName('boardSetButton')[0]
 
 document.getElementsByClassName('container')[0].insertAdjacentHTML("beforeend",
-    '<div class="boardSet" style="z-index: 99999; position:absolute;height: 50%;margin: auto;width: 80%;background-color: white;bottom: 20%;left: 10%;flex-flow: column nowrap;display: flex;align-items: center;text-align: center;' +
+    '<div class="boardSet" style="z-index: 99999; background-color: #bfa; position:absolute;height: 50%;margin: auto;width: 80%;bottom: 20%;left: 10%;flex-flow: column nowrap;display: flex;align-items: center;text-align: center;' +
     'border: 2px solid blue;display: none">' +
     ' <h3>设置面板1.1 <span style="font-size: 10px">by 与風</span></h3>' +
+    '<h4>如果你有好的想法和建议,欢迎在仙界群@与風</h4>' +
     '<p>请在下面输入要隐藏的触发名称,使用英文符号","分隔</p>' +
     '<textarea class="textHide" style="font-size:  16px;width: 50%" rows="5" ></textarea>' +
-    '<div style="display: flex;justify-content:center;"><div class="readyAllButton" style="border: 1px solid greenyellow;margin-top:20px;right:20px;margin-right: 10px;width: 50px;line-height:30px;height: 30px;">确认</div>' +
-    '<div class="cancelButton" style="border: 1px solid greenyellow;margin-top:20px;right:20px;margin-right: 10px;width: 50px;line-height:30px;height: 30px;">取消</div></div></div>')
+    '<div style="display: flex;justify-content:center;"><div class="readyAllButton" style="background-color: deeppink; border: 1px solid greenyellow;margin-top:20px;right:20px;margin-right: 10px;width: 50px;line-height:30px;height: 30px;">确认</div>' +
+    '<div class="cancelButton" style="border: 1px solid greenyellow;margin-top:20px;right:20px;margin-right: 10px;width: 50px;line-height:30px;height: 30px;background-color: deeppink; ">取消</div></div></div>')
 
 document.getElementsByClassName('textHide')[0].value = localStorage.getItem("hideTrigger") ? localStorage.getItem("hideTrigger") : '橙开始,橙结束,橙目标,橙翻车'
 
