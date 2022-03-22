@@ -157,7 +157,7 @@ let boardSetButton = document.getElementsByClassName('boardSetButton')[0]
 document.getElementsByClassName('container')[0].insertAdjacentHTML("beforeend",
     '<div class="boardSet" style="z-index: 99999; background-color: #bfa; position:absolute;height: 50%;margin: auto;width: 80%;bottom: 20%;left: 10%;flex-flow: column nowrap;display: flex;align-items: center;text-align: center;' +
     'border: 2px solid blue;display: none">' +
-    ' <h3>设置面板1.1 <span style="font-size: 10px">by 与風</span></h3>' +
+    ' <h3>设置面板1.3 <span style="font-size: 10px">by 与風</span></h3>' +
     '<h4>如果你有好的想法和建议,欢迎在仙界群@与風</h4>' +
     '<p>请在下面输入要隐藏的触发名称,使用英文符号","分隔</p>' +
     '<textarea class="textHide" style="font-size:  16px;width: 50%" rows="5" ></textarea>' +
