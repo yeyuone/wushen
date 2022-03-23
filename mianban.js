@@ -151,18 +151,22 @@ function triggerAcitonfunc(){
 
 
 //添加按钮 添加弹窗
-document.getElementsByClassName('raidToolbar')[0].insertAdjacentHTML("beforeend", '<span class="raid-item boardSetButton"><hio>设置</hio></span>')
+document.getElementsByClassName('raidToolbar')[0].insertAdjacentHTML("beforeend", '<span style="cursor:pointer;" class="raid-item boardSetButton"><hio>设置</hio></span>')
 let boardSetButton = document.getElementsByClassName('boardSetButton')[0]
 
 document.getElementsByClassName('container')[0].insertAdjacentHTML("beforeend",
-    '<div class="boardSet" style="z-index: 99999; background-color: #bfa; position:absolute;height: 50%;margin: auto;width: 80%;bottom: 20%;left: 10%;flex-flow: column nowrap;display: flex;align-items: center;text-align: center;' +
+    '<div class="boardSet" style="z-index: 99999;  overflow:scroll;background-color: #bfa; position:absolute;height: 50%;margin: auto;width: 80%;bottom: 20%;left: 10%;flex-flow: column nowrap;display: flex;align-items: center;text-align: center;' +
     'border: 2px solid blue;display: none">' +
-    ' <h3>设置面板1.3 <span style="font-size: 10px">by 与風</span></h3>' +
+    ' <h3>设置面板1.4 <span style="font-size: 10px">by 与風</span></h3>' +
     '<h4>如果你有好的想法和建议,欢迎在仙界群@与風</h4>' +
+    '<div><p style="color:darkblue;"> 消息复制功能:</p>' +
+    ' <p style="color:darkblue;"> 解决app无法复制消息的问题,可复制部分提示内容,发言,为提高体验,减少消耗,每点一次启动:每条消息都会获得一次复制机会,简单来说:点击启动,然后点击你要复制的消息</p>' +
+    '<span class="startToCopy" style="color: red;border: 1px solid cornflowerblue;background-color: cornflowerblue;cursor:pointer; padding: 5px 10px">启动</span></div>' +
+    '<div style="width:100%;margin:5% 0;border-top: 1px solid coral;"></div>' +
     '<p>请在下面输入要隐藏的触发名称,使用英文符号","分隔</p>' +
     '<textarea class="textHide" style="font-size:  16px;width: 50%" rows="5" ></textarea>' +
-    '<div style="display: flex;justify-content:center;"><div class="readyAllButton" style="background-color: deeppink; border: 1px solid greenyellow;margin-top:20px;right:20px;margin-right: 10px;width: 50px;line-height:30px;height: 30px;">确认</div>' +
-    '<div class="cancelButton" style="border: 1px solid greenyellow;margin-top:20px;right:20px;margin-right: 10px;width: 50px;line-height:30px;height: 30px;background-color: deeppink; ">取消</div></div></div>')
+    '<div style="display: flex;justify-content:center;margin-bottom: 5%"><div class="readyAllButton" style="background-color: cornflowerblue; border: 1px solid greenyellow;margin-top:20px;right:20px;margin-right: 10px;width: 50px;line-height:30px;height: 30px;cursor:pointer;">确认</div>' +
+    '<div class="cancelButton" style="border: 1px solid greenyellow;margin-top:20px;right:20px;margin-right: 10px;width: 50px;line-height:30px;height: 30px;background-color: deeppink;cursor:pointer; ">取消</div></div></div>')
 
 document.getElementsByClassName('textHide')[0].value = localStorage.getItem("hideTrigger") ? localStorage.getItem("hideTrigger") : '橙开始,橙结束,橙目标,橙翻车'
 
@@ -201,11 +205,11 @@ document.getElementsByClassName('br-tool')[0].onclick = ()=>{
 document.getElementsByClassName("raidToolbar")[0].classList.add('mianBanBegin')
 document.getElementsByClassName("WG_log")[0].classList.add('mianBanBegin')
 document.getElementsByClassName("boardButton")[document.getElementsByClassName("boardButton").length - 1].onclick = function () {
- let WG_log =    document.getElementsByClassName("WG_log")[0]
+    let WG_log =    document.getElementsByClassName("WG_log")[0]
     let raidToolbar = document.getElementsByClassName("raidToolbar")[0]
     if (WG_log.classList.contains('mianBanDown')) {
         //显示
-         //删除类
+        //删除类
         raidToolbar.classList.remove('mianBanDown')
         WG_log.classList.remove('mianBanDown')
 
@@ -233,3 +237,48 @@ document.getElementsByClassName("boardButton")[document.getElementsByClassName("
 }
 
 
+
+
+//复制函数
+function copy(str){
+    var save = function (e){
+        e.clipboardData.setData('text/plain',str);//clipboardData对象
+        e.preventDefault();//阻止默认行为
+        //点击后失效
+        e.target.onclick = null;
+    };
+    document.addEventListener('copy',save);
+    console.log(str)
+    return document.execCommand("copy");//使文档处于可编辑状态，否则无效
+}
+
+//实际事件函数
+function copyList(list) {
+    if (list.length>0){
+        for (let j =0;j<list.length;j++){
+            list[j].addEventListener('click',function(){});
+            list[j].onclick = (ev)=>{
+                //失效前一个函数
+                ev.target.onclick != null?'':ev.target.onclick=null
+                copy(list[j].innerText)
+            }
+        }
+    }
+}
+
+
+
+
+
+//绑点击复制事件
+document.getElementsByClassName('startToCopy')[0].onclick = () => {
+    document.getElementsByClassName('boardSet')[0].style.display = 'none'
+    var channelList =  document.getElementsByClassName('channel')[0].firstChild.childNodes
+    var contentMessageList =  document.getElementsByClassName('content-message')[0].childNodes>1?document.getElementsByClassName('content-message')[0].childNodes:document.getElementsByClassName('content-message')[0].firstChild.childNodes
+
+
+//复制聊天记录
+    copyList(channelList)
+    //复制提示内容
+    copyList(contentMessageList)
+}
