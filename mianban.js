@@ -160,7 +160,7 @@ document.getElementsByClassName('container')[0].insertAdjacentHTML("beforeend",
     ' <h3>设置面板1.4 <span style="font-size: 10px">by 与風</span></h3>' +
     '<h4>如果你有好的想法和建议,欢迎在仙界群@与風</h4>' +
     '<div><p style="color:darkblue;"> 消息复制功能:</p>' +
-    ' <p style="color:darkblue;"> 解决app无法复制消息的问题,可复制部分提示内容,发言,为提高体验,减少消耗,每点一次启动:每条消息都会获得一次复制机会,简单来说:点击启动,然后点击你要复制的消息</p>' +
+    ' <p style="color:darkblue;"> 解决app无法复制消息的问题,可复制提示内容,发言,为提高体验,减少消耗,每点一次启动:每条消息都会获得一次复制机会,简单来说:点击启动,然后点击你要复制的消息</p>' +
     '<span class="startToCopy" style="color: red;border: 1px solid cornflowerblue;background-color: cornflowerblue;cursor:pointer; padding: 5px 10px">启动</span></div>' +
     '<div style="width:100%;margin:5% 0;border-top: 1px solid coral;"></div>' +
     '<p>请在下面输入要隐藏的触发名称,使用英文符号","分隔</p>' +
@@ -274,11 +274,16 @@ function copyList(list) {
 document.getElementsByClassName('startToCopy')[0].onclick = () => {
     document.getElementsByClassName('boardSet')[0].style.display = 'none'
     var channelList =  document.getElementsByClassName('channel')[0].firstChild.childNodes
-    var contentMessageList =  document.getElementsByClassName('content-message')[0].childNodes>1?document.getElementsByClassName('content-message')[0].childNodes:document.getElementsByClassName('content-message')[0].firstChild.childNodes
+    var contentMessageList =
+        document.getElementsByClassName('content-message')[0].lastChild
 
-
+    contentMessageList.onclick = (ev)=>{
+        //失效前一个函数
+        ev.target.onclick != null?'':ev.target.onclick=null
+        copy(contentMessageList.innerText)
+    }
 //复制聊天记录
     copyList(channelList)
     //复制提示内容
-    copyList(contentMessageList)
+
 }
