@@ -159,7 +159,7 @@ document.getElementsByClassName('container')[0].insertAdjacentHTML("beforeend",
     '<div class="boardSet" style="z-index: 99999;  overflow:scroll;background-color: #bfa; position:absolute;height: 60%;margin: auto;width: 90%;bottom: 20%;left: 10%;flex-flow: column nowrap;display: flex;align-items: center;text-align: center;' +
     'border: 2px solid blue;display: none">' +
     '   <div class="cancelButton" style="text-align: center;cursor: pointer; line-height: 20px; float:right;padding:20px 20px 0 0; color: black;font-size: 15px;">X</div>' +
-    '   <h3>设置面板1.4 ' +
+    '   <h3>设置面板1.5 ' +
     '       <span style="font-size: 10px">by 与風</span>' +
     '   </h3>' +
     '   <h4>如果你有好的想法和建议,欢迎在仙界群@与風</h4>' +
