@@ -379,11 +379,12 @@ document.getElementsByClassName('useSevedColorChange')[0].onclick = ()=>{
     }
 }
 
-//自定义颜色确认的按钮
+//自定义颜色确认的按钮 确认
 document.getElementsByClassName('changeColorButton')[0].onclick = ()=>{
     var style = document.head.innerHTML
     var styleAddress = style.indexOf("</style>")
     document.head.innerHTML = style.slice(0,styleAddress)+getColorInput()+style.slice(styleAddress)
+    document.getElementsByClassName('boardSet')[0].style.display = 'none'
 }
 
 
