@@ -19,6 +19,7 @@ var styleStr = '.mianBanBegin {\n' +
     '}\n'
 
 
+var colorHtml = ['NOR', 'BLK', 'BLU', 'CYN', 'RED', 'MAG', 'YEL', 'WHT', 'ORA', 'HIK', 'HIB', 'HIG', 'HIC', 'HIR', 'HIM', 'HIY', 'HIW', 'HIO', 'HIJ', 'HIZ', 'ORD']
 
 
 //获取
@@ -155,18 +156,120 @@ document.getElementsByClassName('raidToolbar')[0].insertAdjacentHTML("beforeend"
 let boardSetButton = document.getElementsByClassName('boardSetButton')[0]
 
 document.getElementsByClassName('container')[0].insertAdjacentHTML("beforeend",
-    '<div class="boardSet" style="z-index: 99999;  overflow:scroll;background-color: #bfa; position:absolute;height: 50%;margin: auto;width: 80%;bottom: 20%;left: 10%;flex-flow: column nowrap;display: flex;align-items: center;text-align: center;' +
+    '<div class="boardSet" style="z-index: 99999;  overflow:scroll;background-color: #bfa; position:absolute;height: 60%;margin: auto;width: 90%;bottom: 20%;left: 10%;flex-flow: column nowrap;display: flex;align-items: center;text-align: center;' +
     'border: 2px solid blue;display: none">' +
-    ' <h3>设置面板1.4 <span style="font-size: 10px">by 与風</span></h3>' +
-    '<h4>如果你有好的想法和建议,欢迎在仙界群@与風</h4>' +
-    '<div><p style="color:darkblue;"> 消息复制功能:</p>' +
-    ' <p style="color:darkblue;"> 解决app无法复制消息的问题,可复制提示内容,发言,为提高体验,减少消耗,每点一次启动:每条消息都会获得一次复制机会,简单来说:点击启动,然后点击你要复制的消息</p>' +
-    '<span class="startToCopy" style="color: red;border: 1px solid cornflowerblue;background-color: cornflowerblue;cursor:pointer; padding: 5px 10px">启动</span></div>' +
-    '<div style="width:100%;margin:5% 0;border-top: 1px solid coral;"></div>' +
-    '<p>请在下面输入要隐藏的触发名称,使用英文符号","分隔</p>' +
-    '<textarea class="textHide" style="font-size:  16px;width: 50%" rows="5" ></textarea>' +
-    '<div style="display: flex;justify-content:center;margin-bottom: 5%"><div class="readyAllButton" style="background-color: cornflowerblue; border: 1px solid greenyellow;margin-top:20px;right:20px;margin-right: 10px;width: 50px;line-height:30px;height: 30px;cursor:pointer;">确认</div>' +
-    '<div class="cancelButton" style="border: 1px solid greenyellow;margin-top:20px;right:20px;margin-right: 10px;width: 50px;line-height:30px;height: 30px;background-color: deeppink;cursor:pointer; ">取消</div></div></div>')
+    '   <div class="cancelButton" style="text-align: center;cursor: pointer; line-height: 20px; float:right;padding:20px 20px 0 0; color: black;font-size: 15px;">X</div>' +
+    '   <h3>设置面板1.4 ' +
+    '       <span style="font-size: 10px">by 与風</span>' +
+    '   </h3>' +
+    '   <h4>如果你有好的想法和建议,欢迎在仙界群@与風</h4>' +
+    '   <div>' +
+    '       <p style="color:darkblue;"> 消息复制功能:</p>' +
+    '       <p style="color:darkblue;"> 解决app无法复制消息的问题,可复制提示内容,发言,为提高体验,减少消耗,每点一次启动:每条消息都会获得一次复制机会,简单来说:点击启动,然后点击你要复制的消息</p>' +
+    '       <span class="startToCopy" style="color: red;border: 1px solid cornflowerblue;background-color: cornflowerblue;cursor:pointer; padding: 5px 10px">启动</span>' +
+    '   </div>' +
+    '   <div style="width:100%;margin:5% 0;border-top: 1px solid coral;"></div>' +
+    '   <p>请在下面输入要隐藏的触发名称,使用英文符号","分隔</p>' +
+    '   <textarea class="textHide" style="font-size:  16px;width: 50%" rows="5" ></textarea>' +
+    '   <div style="display: flex;justify-content:center;margin-bottom: 5%">' +
+    '       <div class="readyAllButton" style="background-color: cornflowerblue; border: 1px solid greenyellow;margin-top:20px;right:20px;margin-right: 10px;width: 50px;line-height:30px;height: 30px;cursor:pointer;">确认</div>' +
+    '       <div class="cancelButton" style="border: 1px solid greenyellow;margin-top:20px;right:20px;margin-right: 10px;width: 50px;line-height:30px;height: 30px;background-color: deeppink;cursor:pointer; ">取消</div>' +
+    '   </div>' +
+    '   <h3 class="openColorChange">颜色自定义功能(点击展开)</h3>' +
+    '   <p>仅支持4位或7位16进制颜色,如:#FFFFFF 具体请百度(颜色不变说明写的有问题哦)</p>' +
+    '   <div class="colorAuto" style="display: none;margin-bottom: 20%;background-color: #000000">' +
+    '       <div style="display: flex;justify-content: center;align-items:center;margin-top: 5px;">' +
+    '               <div style="color:#008000;margin-right: 1%">本颜色改为:</div>' +
+    '               <input id="color0" type="text">' +
+    '       </div>' +
+    '       <div style="display: flex;justify-content: center;align-items:center;margin-top: 5px;">' +
+    '               <div style="color:#505050;margin-right: 1%">本颜色改为:</div>' +
+    '               <input id="color1" type="text">' +
+    '       </div>' +
+    '       <div style="display: flex;justify-content: center;align-items:center;margin-top: 5px;">' +
+    '               <div style="color:#000080;margin-right: 1%">本颜色改为:</div>' +
+    '               <input id="color2" type="text">' +
+    '       </div>' +
+    '       <div style="display: flex;justify-content: center;align-items:center;margin-top: 5px;">' +
+    '               <div style="color:#008080;margin-right: 1%">本颜色改为:</div>' +
+    '               <input id="color3" type="text">' +
+    '       </div>' +
+    '       <div style="display: flex;justify-content: center;align-items:center;margin-top: 5px;">' +
+    '               <div style="color:#800000;margin-right: 1%">本颜色改为:</div>' +
+    '               <input id="color4" type="text">' +
+    '       </div>' +
+    '       <div style="display: flex;justify-content: center;align-items:center;margin-top: 5px;">' +
+    '               <div style="color:#800080;margin-right: 1%">本颜色改为:</div>' +
+    '               <input id="color5" type="text">' +
+    '       </div>' +
+    '       <div style="display: flex;justify-content: center;align-items:center;margin-top: 5px;">' +
+    '               <div style="color:#808000;margin-right: 1%">本颜色改为:</div>' +
+    '               <input id="color6" type="text">' +
+    '       </div>' +
+    '       <div style="display: flex;justify-content: center;align-items:center;margin-top: 5px;">' +
+    '               <div style="color:#C0C0C0;margin-right: 1%">本颜色改为:</div>' +
+    '               <input id="color7" type="text">' +
+    '       </div>' +
+    '       <div style="display: flex;justify-content: center;align-items:center;margin-top: 5px;">' +
+    '               <div style="color:#d26900;margin-right: 1%">本颜色改为:</div>' +
+    '               <input id="color8" type="text">' +
+    '       </div>' +
+    '       <div style="display: flex;justify-content: center;align-items:center;margin-top: 5px;">' +
+    '               <div style="color:#808080;margin-right: 1%">本颜色改为:</div>' +
+    '               <input id="color9" type="text">' +
+    '       </div>' +
+    '       <div style="display: flex;justify-content: center;align-items:center;margin-top: 5px;">' +
+    '               <div style="color:#0000FF;margin-right: 1%">本颜色改为:</div>' +
+    '               <input id="color10" type="text">' +
+    '       </div>' +
+    '       <div style="display: flex;justify-content: center;align-items:center;margin-top: 5px;">' +
+    '               <div style="color:#00FF00;margin-right: 1%">本颜色改为:</div>' +
+    '               <input id="color11" type="text">' +
+    '       </div>' +
+    '       <div style="display: flex;justify-content: center;align-items:center;margin-top: 5px;">' +
+    '               <div style="color:#00FFFF;margin-right: 1%">本颜色改为:</div>' +
+    '               <input id="color12" type="text">' +
+    '       </div>' +
+    '       <div style="display: flex;justify-content: center;align-items:center;margin-top: 5px;">' +
+    '               <div style="color:#FF0000;margin-right: 1%">本颜色改为:</div>' +
+    '               <input id="color13" type="text">' +
+    '       </div>' +
+    '       <div style="display: flex;justify-content: center;align-items:center;margin-top: 5px;">' +
+    '               <div style="color:#FF00FF;margin-right: 1%">本颜色改为:</div>' +
+    '               <input id="color14" type="text">' +
+    '       </div>' +
+    '       <div style="display: flex;justify-content: center;align-items:center;margin-top: 5px;">' +
+    '               <div style="color:#FFFF00;margin-right: 1%">本颜色改为:</div>' +
+    '               <input id="color15" type="text">' +
+    '       </div>' +
+    '       <div style="display: flex;justify-content: center;align-items:center;margin-top: 5px;">' +
+    '               <div style="color:#FFFFFF;margin-right: 1%">本颜色改为:</div>' +
+    '               <input id="color16" type="text">' +
+    '       </div>' +
+    '       <div style="display: flex;justify-content: center;align-items:center;margin-top: 5px;">' +
+    '               <div style="color:#FFA500;margin-right: 1%">本颜色改为:</div>' +
+    '               <input id="color17" type="text">' +
+    '       </div>' +
+    '       <div style="display: flex;justify-content: center;align-items:center;margin-top: 5px;">' +
+    '               <div style="color:#FFD700;margin-right: 1%">本颜色改为:</div>' +
+    '               <input id="color18" type="text">' +
+    '       </div>' +
+    '       <div style="display: flex;justify-content: center;align-items:center;margin-top: 5px;">' +
+    '               <div style="color:#912CEE;margin-right: 1%">本颜色改为:</div>' +
+    '               <input id="color19" type="text">' +
+    '       </div>' +
+    '       <div style="display: flex;justify-content: center;align-items:center;margin-top: 5px;">' +
+    '               <div style="color:#FF4500;margin-right: 1% ">本颜色改为:</div>' +
+    '               <input id="color20" type="text">' +
+    '       </div>' +
+    '       <div style="display: flex;justify-content: center;align-items:center;margin-top: 5px;">' +
+    '           <div class="changeColorButton" style="background-color: cornflowerblue;margin:5%; border: 1px solid greenyellow;width: auto;line-height:30px;height: 30px;cursor:pointer;">确认</div>' +
+    '           <div class="cancelButton" style="border: 1px solid greenyellow;margin:5%;width: auto;line-height:30px;height: 30px;background-color: deeppink;cursor:pointer; ">取消</div>' +
+    '           <div class="saveColorChange" style="border: 1px solid greenyellow;margin:5%;width: auto;line-height:30px;height: 30px;background-color: deeppink;cursor:pointer; ">保存</div>' +
+    '           <div class="useSevedColorChange" style="border: 1px solid greenyellow;margin:5%;width: auto;line-height:30px;height: 30px;background-color: deeppink;cursor:pointer; ">使用已保存</div>' +
+    '       </div>' +
+    '   </div>' +
+    '</div>')
 
 document.getElementsByClassName('textHide')[0].value = localStorage.getItem("hideTrigger") ? localStorage.getItem("hideTrigger") : '橙开始,橙结束,橙目标,橙翻车'
 
@@ -177,6 +280,14 @@ boardSetButton.onclick = () => {
 //弹窗的js
 //取消
 document.getElementsByClassName('cancelButton')[0].onclick = () => {
+    document.getElementsByClassName('boardSet')[0].style.display = 'none'
+}
+//取消
+document.getElementsByClassName('cancelButton')[1].onclick = () => {
+    document.getElementsByClassName('boardSet')[0].style.display = 'none'
+}
+//取消
+document.getElementsByClassName('cancelButton')[2].onclick = () => {
     document.getElementsByClassName('boardSet')[0].style.display = 'none'
 }
 //确定 //保存到本地
@@ -236,7 +347,44 @@ document.getElementsByClassName("boardButton")[document.getElementsByClassName("
     }
 }
 
+//展开颜色改变面板
+document.getElementsByClassName('openColorChange')[0].onclick = ()=> {
+    document.getElementsByClassName('colorAuto')[0].style.display = ''
+}
+//自定义颜色输入框获取
+function getColorInput() {
+    var str = ''
+    for (let i=0;i<21;i++){
+        let tag = document.getElementById('color'+i).value
+        if (tag!=''&&tag.slice(0,1)=='#'&&(tag.length==4||tag.length==7)){
+            str += '\n'+ colorHtml[i]+' {\n color:'+ tag +';\n}'
+        }
+    }
+    return str
+}
 
+//保存颜色变更到本地
+document.getElementsByClassName('saveColorChange')[0].onclick = ()=>{
+    localStorage.setItem("colorChanged", getColorInput());
+}
+
+//恢复使用上次保存的颜色
+document.getElementsByClassName('useSevedColorChange')[0].onclick = ()=>{
+    if (localStorage.getItem("colorChanged")){
+        var style = document.head.innerHTML
+        var styleAddress = style.indexOf("</style>")
+        document.head.innerHTML = style.slice(0,styleAddress)+localStorage.getItem("colorChanged")+style.slice(styleAddress)
+    }else{
+        alert('没有记录')
+    }
+}
+
+//自定义颜色确认的按钮
+document.getElementsByClassName('changeColorButton')[0].onclick = ()=>{
+    var style = document.head.innerHTML
+    var styleAddress = style.indexOf("</style>")
+    document.head.innerHTML = style.slice(0,styleAddress)+getColorInput()+style.slice(styleAddress)
+}
 
 
 //复制函数
