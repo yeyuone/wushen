@@ -32,9 +32,12 @@ document.head.innerHTML = style.slice(0,styleAddress)+styleStr+style.slice(style
 
 var flagTiggerIsShow = true   //标识 目前状态:true精简列表  false(全部列表)
 var hidName = localStorage.getItem("hideTrigger") ? localStorage.getItem("hideTrigger").split(',') : [];
+//快捷发言数组
+var  panelArr = localStorage.getItem("textPanel") ? localStorage.getItem("textPanel").split(',') : [];
 
 document.getElementsByClassName("trigger")[0].onclick = () => {
     hidName = localStorage.getItem("hideTrigger") ? localStorage.getItem("hideTrigger").split(',') : [];
+    panelArr = localStorage.getItem("textPanel") ? localStorage.getItem("textPanel").split(',') : [];
     let parNodes = document.getElementsByClassName("zdy-item")
     let changeButton = document.getElementById('wsmud_raid_left')
     changeButton.innerText = '全部列表'
@@ -159,7 +162,7 @@ document.getElementsByClassName('container')[0].insertAdjacentHTML("beforeend",
     '<div class="boardSet" style="z-index: 99999;  overflow:scroll;background-color: #bfa; position:absolute;height: 60%;margin: auto;width: 90%;bottom: 20%;left: 10%;flex-flow: column nowrap;display: flex;align-items: center;text-align: center;' +
     'border: 2px solid blue;display: none">' +
     '   <div class="cancelButton" style="text-align: center;cursor: pointer; line-height: 20px; float:right;padding:20px 20px 0 0; color: black;font-size: 15px;">X</div>' +
-    '   <h3>设置面板1.5 ' +
+    '   <h3>设置面板1.6 ' +
     '       <span style="font-size: 10px">by 与風</span>' +
     '   </h3>' +
     '   <h4>如果你有好的想法和建议,欢迎在仙界群@与風</h4>' +
@@ -171,6 +174,8 @@ document.getElementsByClassName('container')[0].insertAdjacentHTML("beforeend",
     '   <div style="width:100%;margin:5% 0;border-top: 1px solid coral;"></div>' +
     '   <p>请在下面输入要隐藏的触发名称,使用英文符号","分隔</p>' +
     '   <textarea class="textHide" style="font-size:  16px;width: 50%" rows="5" ></textarea>' +
+    '   <p>请在下面输入要设置的快捷发言内容,使用英文符号","分隔</p>' +
+    '   <textarea class="textPanel" style="font-size:  16px;width: 50%" rows="5" ></textarea>' +
     '   <div style="display: flex;justify-content:center;margin-bottom: 5%">' +
     '       <div class="readyAllButton" style="background-color: cornflowerblue; border: 1px solid greenyellow;margin-top:20px;right:20px;margin-right: 10px;width: 50px;line-height:30px;height: 30px;cursor:pointer;">确认</div>' +
     '       <div class="cancelButton" style="border: 1px solid greenyellow;margin-top:20px;right:20px;margin-right: 10px;width: 50px;line-height:30px;height: 30px;background-color: deeppink;cursor:pointer; ">取消</div>' +
@@ -272,6 +277,7 @@ document.getElementsByClassName('container')[0].insertAdjacentHTML("beforeend",
     '</div>')
 
 document.getElementsByClassName('textHide')[0].value = localStorage.getItem("hideTrigger") ? localStorage.getItem("hideTrigger") : '橙开始,橙结束,橙目标,橙翻车'
+document.getElementsByClassName('textPanel')[0].value = localStorage.getItem("textPanel") ? localStorage.getItem("textPanel") : '冲冲冲!,20出1,来打架!,告辞!,下了下了,老子来了!'
 
 boardSetButton.onclick = () => {
     document.getElementsByClassName('boardSet')[0].style.display = ''
@@ -290,10 +296,15 @@ document.getElementsByClassName('cancelButton')[1].onclick = () => {
 document.getElementsByClassName('cancelButton')[2].onclick = () => {
     document.getElementsByClassName('boardSet')[0].style.display = 'none'
 }
-//确定 //保存到本地
+//确定 //保存到本地 //更新现场数据
 document.getElementsByClassName('readyAllButton')[0].onclick = () => {
     localStorage.setItem("hideTrigger", document.getElementsByClassName('textHide')[0].value);
+    localStorage.setItem("textPanel", document.getElementsByClassName('textPanel')[0].value);
+    hidName = localStorage.getItem("hideTrigger") ? localStorage.getItem("hideTrigger").split(',') : [];
+    panelArr = localStorage.getItem("textPanel") ? localStorage.getItem("textPanel").split(',') : [];
     document.getElementsByClassName('boardSet')[0].style.display = 'none'
+    //更新聊天信息现场
+    addPanelHTML()
 }
 
 
@@ -379,12 +390,11 @@ document.getElementsByClassName('useSevedColorChange')[0].onclick = ()=>{
     }
 }
 
-//自定义颜色确认的按钮 确认
+//自定义颜色确认的按钮
 document.getElementsByClassName('changeColorButton')[0].onclick = ()=>{
     var style = document.head.innerHTML
     var styleAddress = style.indexOf("</style>")
     document.head.innerHTML = style.slice(0,styleAddress)+getColorInput()+style.slice(styleAddress)
-    document.getElementsByClassName('boardSet')[0].style.display = 'none'
 }
 
 
@@ -436,3 +446,44 @@ document.getElementsByClassName('startToCopy')[0].onclick = () => {
     //复制提示内容
 
 }
+
+
+
+
+
+//快捷发言
+
+function addPanelHTML(){
+    //清空旧HTML
+    if (document.getElementsByClassName('panelInfo').length>1){
+        document.getElementsByClassName('panelMianBan')[0].parentNode.removeChild(document.getElementsByClassName('panelMianBan')[0])
+    }
+    var mindPanelReadyHTML = ''
+    for (let i =0;i<panelArr.length;i++){
+        mindPanelReadyHTML+=`<div tag= "${i}" class="panelInfo" style="color: black;cursor: pointer; margin: 10px;">${panelArr[i]}</div>`
+    }
+    //加入HTML
+     var panelHTML = '<div class="panelMianBan" style="display: flex;width: 100% ;height: auto;background-color: #717471;' +
+        'flex-wrap: wrap;align-content: flex-start;">'+mindPanelReadyHTML+'</div>'
+    document.getElementsByClassName('chat-panel')[0].insertAdjacentHTML("beforeend",panelHTML)
+
+    //绑定事件
+    var allPanelHTML = document.getElementsByClassName('panelInfo')
+
+    for (let i = 0;i<allPanelHTML.length;i++){
+        allPanelHTML[i].onclick = ()=>{
+            document.getElementsByClassName('sender-box')[0].value = allPanelHTML[allPanelHTML[i].attributes.tag.value].innerHTML;
+            sendPanel()
+        }
+    }
+}
+
+addPanelHTML()
+
+
+//点击发送按键
+function sendPanel() {
+    document.getElementsByClassName('sender-btn')[0].click()
+}
+
+
