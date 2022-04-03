@@ -1,4 +1,16 @@
 
+
+var roleid =  document.querySelectorAll(".role-list>.select")[0].attributes['roleid'].value
+
+var v = "面板1.7更新内容:\n" +
+    "        1. 所有配置支持云备份\n" +
+    "        2. 目前功能:复制,触发隐藏,面板隐藏,快捷发言,颜色自定义\n"
+
+document.getElementsByClassName('channel')[0].childNodes[0].insertAdjacentHTML("beforeend",'<ord>'+v+'</ord>')
+
+
+
+
 var styleStr = '.mianBanBegin {\n' +
     '    position: relative;\n' +
     '    bottom: 0;\n' +
@@ -31,13 +43,17 @@ document.head.innerHTML = style.slice(0,styleAddress)+styleStr+style.slice(style
 
 
 var flagTiggerIsShow = true   //标识 目前状态:true精简列表  false(全部列表)
-var hidName = localStorage.getItem("hideTrigger") ? localStorage.getItem("hideTrigger").split(',') : [];
-//快捷发言数组
-var  panelArr = localStorage.getItem("textPanel") ? localStorage.getItem("textPanel").split(',') : [];
+
+var hidName = localStorage.getItem(roleid+"_"+"hideTrigger") ? (localStorage.getItem(roleid+"_"+"hideTrigger").slice(1,localStorage.getItem(roleid+"_"+"hideTrigger").length-1)).split(',') : [];
+var panelArr = localStorage.getItem(roleid+"_"+"textPanel") ? (localStorage.getItem(roleid+"_"+"textPanel").slice(1,localStorage.getItem(roleid+"_"+"textPanel").length-1)).split(',') : [];
+
 
 document.getElementsByClassName("trigger")[0].onclick = () => {
-    hidName = localStorage.getItem("hideTrigger") ? localStorage.getItem("hideTrigger").split(',') : [];
-    panelArr = localStorage.getItem("textPanel") ? localStorage.getItem("textPanel").split(',') : [];
+
+    hidName = localStorage.getItem(roleid+"_"+"hideTrigger") ? (localStorage.getItem(roleid+"_"+"hideTrigger").slice(1,localStorage.getItem(roleid+"_"+"hideTrigger").length-1)).split(',') : [];
+    panelArr = localStorage.getItem(roleid+"_"+"textPanel") ? (localStorage.getItem(roleid+"_"+"textPanel").slice(1,localStorage.getItem(roleid+"_"+"textPanel").length-1)).split(',') : [];
+
+
     let parNodes = document.getElementsByClassName("zdy-item")
     let changeButton = document.getElementById('wsmud_raid_left')
     changeButton.innerText = '全部列表'
@@ -162,7 +178,7 @@ document.getElementsByClassName('container')[0].insertAdjacentHTML("beforeend",
     '<div class="boardSet" style="z-index: 99999;  overflow:scroll;background-color: #bfa; position:absolute;height: 60%;margin: auto;width: 90%;bottom: 20%;left: 10%;flex-flow: column nowrap;display: flex;align-items: center;text-align: center;' +
     'border: 2px solid blue;display: none">' +
     '   <div class="cancelButton" style="text-align: center;cursor: pointer; line-height: 20px; float:right;padding:20px 20px 0 0; color: black;font-size: 15px;">X</div>' +
-    '   <h3>设置面板1.6 ' +
+    '   <h3>设置面板1.7 ' +
     '       <span style="font-size: 10px">by 与風</span>' +
     '   </h3>' +
     '   <h4>如果你有好的想法和建议,欢迎在仙界群@与風</h4>' +
@@ -175,7 +191,7 @@ document.getElementsByClassName('container')[0].insertAdjacentHTML("beforeend",
     '   <p>请在下面输入要隐藏的触发名称,使用英文符号","分隔</p>' +
     '   <textarea class="textHide" style="font-size:  16px;width: 50%" rows="5" ></textarea>' +
     '   <p>请在下面输入要设置的快捷发言内容,使用英文符号","分隔</p>' +
-    '   <textarea class="textPanel" style="font-size:  16px;width: 50%" rows="5" ></textarea>' +
+    '   <textarea class="textPanelMianban" style="font-size:  16px;width: 50%" rows="5" ></textarea>' +
     '   <div style="display: flex;justify-content:center;margin-bottom: 5%">' +
     '       <div class="readyAllButton" style="background-color: cornflowerblue; border: 1px solid greenyellow;margin-top:20px;right:20px;margin-right: 10px;width: 50px;line-height:30px;height: 30px;cursor:pointer;">确认</div>' +
     '       <div class="cancelButton" style="border: 1px solid greenyellow;margin-top:20px;right:20px;margin-right: 10px;width: 50px;line-height:30px;height: 30px;background-color: deeppink;cursor:pointer; ">取消</div>' +
@@ -276,8 +292,8 @@ document.getElementsByClassName('container')[0].insertAdjacentHTML("beforeend",
     '   </div>' +
     '</div>')
 
-document.getElementsByClassName('textHide')[0].value = localStorage.getItem("hideTrigger") ? localStorage.getItem("hideTrigger") : '橙开始,橙结束,橙目标,橙翻车'
-document.getElementsByClassName('textPanel')[0].value = localStorage.getItem("textPanel") ? localStorage.getItem("textPanel") : '冲冲冲!,20出1,来打架!,告辞!,下了下了,老子来了!'
+document.getElementsByClassName('textHide')[0].value = localStorage.getItem(roleid+"_"+"hideTrigger") ? localStorage.getItem(roleid+"_"+"hideTrigger").slice(1,localStorage.getItem(roleid+"_"+"hideTrigger").length-1) : '橙开始,橙结束,橙目标,橙翻车'
+document.getElementsByClassName('textPanelMianban')[0].value = localStorage.getItem(roleid+"_"+"textPanel") ? localStorage.getItem(roleid+"_"+"textPanel").slice(1,localStorage.getItem(roleid+"_"+"textPanel").length-1) : '冲冲冲!,20出1,来打架!,告辞!,下了下了,老子来了!'
 
 boardSetButton.onclick = () => {
     document.getElementsByClassName('boardSet')[0].style.display = ''
@@ -298,10 +314,10 @@ document.getElementsByClassName('cancelButton')[2].onclick = () => {
 }
 //确定 //保存到本地 //更新现场数据
 document.getElementsByClassName('readyAllButton')[0].onclick = () => {
-    localStorage.setItem("hideTrigger", document.getElementsByClassName('textHide')[0].value);
-    localStorage.setItem("textPanel", document.getElementsByClassName('textPanel')[0].value);
-    hidName = localStorage.getItem("hideTrigger") ? localStorage.getItem("hideTrigger").split(',') : [];
-    panelArr = localStorage.getItem("textPanel") ? localStorage.getItem("textPanel").split(',') : [];
+    localStorage.setItem(roleid+"_"+"hideTrigger", '"'+document.getElementsByClassName('textHide')[0].value+'"');
+    localStorage.setItem(roleid+"_"+"textPanel", '"'+document.getElementsByClassName('textPanelMianban')[0].value+'"');
+    hidName = localStorage.getItem(roleid+"_"+"hideTrigger") ? (localStorage.getItem(roleid+"_"+"hideTrigger").slice(1,localStorage.getItem(roleid+"_"+"hideTrigger").length-1)).split(',') : [];
+    panelArr = localStorage.getItem(roleid+"_"+"textPanel") ? (localStorage.getItem(roleid+"_"+"textPanel").slice(1,localStorage.getItem(roleid+"_"+"textPanel").length-1)).split(',') : [];
     document.getElementsByClassName('boardSet')[0].style.display = 'none'
     //更新聊天信息现场
     addPanelHTML()
@@ -376,15 +392,15 @@ function getColorInput() {
 
 //保存颜色变更到本地
 document.getElementsByClassName('saveColorChange')[0].onclick = ()=>{
-    localStorage.setItem("colorChanged", getColorInput());
+    localStorage.setItem(roleid+"_"+"colorChanged",'"'+ getColorInput()+'"');
 }
 
 //恢复使用上次保存的颜色
 document.getElementsByClassName('useSevedColorChange')[0].onclick = ()=>{
-    if (localStorage.getItem("colorChanged")){
+    if (localStorage.getItem(roleid+"_"+"colorChanged")){
         var style = document.head.innerHTML
         var styleAddress = style.indexOf("</style>")
-        document.head.innerHTML = style.slice(0,styleAddress)+localStorage.getItem("colorChanged")+style.slice(styleAddress)
+        document.head.innerHTML = style.slice(0,styleAddress)+localStorage.getItem(roleid+"_"+"colorChanged").slice(1,localStorage.getItem(roleid+"_"+"colorChanged").length-1)+style.slice(styleAddress)
     }else{
         alert('没有记录')
     }
@@ -395,6 +411,7 @@ document.getElementsByClassName('changeColorButton')[0].onclick = ()=>{
     var style = document.head.innerHTML
     var styleAddress = style.indexOf("</style>")
     document.head.innerHTML = style.slice(0,styleAddress)+getColorInput()+style.slice(styleAddress)
+    document.getElementsByClassName('boardSet')[0].style.display = 'none'
 }
 
 
