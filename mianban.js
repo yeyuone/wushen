@@ -6,7 +6,7 @@ var v = "面板1.7更新内容:\n" +
     "        1. 所有配置支持云备份\n" +
     "        2. 目前功能:复制,触发隐藏,面板隐藏,快捷发言,颜色自定义\n"
 
-document.getElementsByClassName('channel')[0].childNodes[0].insertAdjacentHTML("beforeend",'<ord>'+v+'</ord>')
+document.getElementsByClassName('content-message')[0].childNodes[0].insertAdjacentHTML("beforeend",'<ord>'+v+'</ord>')
 
 
 
