@@ -480,7 +480,7 @@ function addPanelHTML(){
         mindPanelReadyHTML+=`<div tag= "${i}" class="panelInfo" style="color: black;cursor: pointer; margin: 10px;">${panelArr[i]}</div>`
     }
     //加入HTML
-     var panelHTML = '<div class="panelMianBan" style="display: flex;width: 100% ;height: auto;background-color: #717471;' +
+    var panelHTML = '<div class="panelMianBan" style="display: flex;width: 100% ;height: auto;background-color: #717471;' +
         'flex-wrap: wrap;align-content: flex-start;">'+mindPanelReadyHTML+'</div>'
     document.getElementsByClassName('chat-panel')[0].insertAdjacentHTML("beforeend",panelHTML)
 
