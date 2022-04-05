@@ -4,7 +4,8 @@ var roleid =  document.querySelectorAll(".role-list>.select")[0].attributes['rol
 
 var v = "面板1.7更新内容:\n" +
     "        1. 所有配置支持云备份\n" +
-    "        2. 目前功能:复制,触发隐藏,面板隐藏,快捷发言,颜色自定义\n"
+    "        2. 目前功能:复制,触发隐藏,面板隐藏,快捷发言,颜色自定义\n" +
+    "        3. 修改快捷发言,可以作为后缀在聊天框对的基础上添加并发送\n"
 
 setTimeout(function () {
     if (document.getElementsByClassName('channel')[0].childNodes[0]){
@@ -495,7 +496,7 @@ function addPanelHTML(){
 
     for (let i = 0;i<allPanelHTML.length;i++){
         allPanelHTML[i].onclick = ()=>{
-            document.getElementsByClassName('sender-box')[0].value = allPanelHTML[allPanelHTML[i].attributes.tag.value].innerHTML;
+            document.getElementsByClassName('sender-box')[0].value = document.getElementsByClassName('sender-box')[0].value+''+ allPanelHTML[allPanelHTML[i].attributes.tag.value].innerHTML;
             sendPanel()
         }
     }
