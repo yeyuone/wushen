@@ -5,18 +5,35 @@ const v = "面板1.7更新内容:\n" +
     "        1. 所有配置支持云备份\n" +
     "        2. 目前功能:复制,触发隐藏,面板隐藏,快捷发言,颜色自定义\n" +
     "        3. 修改快捷发言,可以作为后缀在聊天框对的基础上添加并发送\n";
+//class->dom
+function domByClass(cla){
+    return document.getElementsByClassName(cla)
+}
+//id->Dom
+function domById(id){
+    return document.getElementById(id)
+}
+//localStorage ->get
+function lSGet(key){
+  return  localStorage.getItem(key)
+}
+//localStorage->set
+function lSSet(key,val){
+    return  localStorage.setItem(key,val)
+}
 
+//更新内容
 setTimeout(function () {
-    if (document.getElementsByClassName('channel')[0].childNodes[0]) {
-        document.getElementsByClassName('channel')[0].childNodes[0].insertAdjacentHTML("beforeend", '<ord>' + v + '</ord>')
+    if (domByClass('channel')[0].childNodes[0]) {
+        domByClass('channel')[0].childNodes[0].insertAdjacentHTML("beforeend", '<ord>' + v + '</ord>')
 
     } else {
-        document.getElementsByClassName('channel')[0].insertAdjacentHTML("beforeend", '<ord>' + v + '</ord>')
+        domByClass('channel')[0].insertAdjacentHTML("beforeend", '<ord>' + v + '</ord>')
     }
 
 }, 3000)
 
-
+//所需css
 const styleStr = '.mianBanBegin {\n' +
     '    position: relative;\n' +
     '    bottom: 0;\n' +
@@ -36,12 +53,12 @@ const styleStr = '.mianBanBegin {\n' +
     '    transition: bottom 1s;\n' +
     '}\n';
 
-
+//自定义颜色所需变量
 const colorHtmlClass = ['NOR', 'BLK', 'BLU', 'CYN', 'RED', 'MAG', 'YEL', 'WHT', 'ORA', 'HIK', 'HIB', 'HIG', 'HIC', 'HIR', 'HIM', 'HIY', 'HIW', 'HIO', 'HIJ', 'HIZ', 'ORD'];
 const colorInfo = ['#008000', '#505050', '#000080', '#008080', '#800000', '#800080', '#808000', '#C0C0C0', '#d26900',
     '#808080', '#0000FF', '#00FF00', '#00FFFF', '#FF0000', '#FF00FF', '#FFFF00', '#FFFFFF', '#FFA500', '#FFD700', '#912CEE', '#FF4500'];
 
-//自定义HTML
+//自定义color所需HTML
 function autoColorHTML() {
     let arr = ''
     for (let i = 0; i < colorInfo.length; i++) {
@@ -54,28 +71,29 @@ function autoColorHTML() {
 }
 
 
-//获取head头并修改
+//获取head头并修改(添加或更新css)
 var style = document.head.innerHTML
 var styleAddress = style.indexOf("</style>")
 document.head.innerHTML = style.slice(0, styleAddress) + styleStr + style.slice(styleAddress)
 
-
 var flagTiggerIsShow = true   //标识 目前状态:true精简列表  false(全部列表)
 
 //更新数据
+//隐藏触发所需
 var hidName
+//快捷发言所需
 var panelArr
 
 function upDate() {
-    hidName = localStorage.getItem(roleid + "_" + "hideTrigger") ? (localStorage.getItem(roleid + "_" + "hideTrigger").slice(1, localStorage.getItem(roleid + "_" + "hideTrigger").length - 1)).split(',') : [];
-    panelArr = localStorage.getItem(roleid + "_" + "textPanel") ? (localStorage.getItem(roleid + "_" + "textPanel").slice(1, localStorage.getItem(roleid + "_" + "textPanel").length - 1)).split(',') : [];
+    hidName = lSGet(roleid + "_hideTrigger") ? (lSGet(roleid + "_hideTrigger").slice(1, lSGet(roleid + "_hideTrigger").length - 1)).split(',') : [];
+    panelArr = lSGet(roleid + "_textPanel") ? (lSGet(roleid + "_textPanel").slice(1, lSGet(roleid + "_textPanel").length - 1)).split(',') : [];
 }
 
 upDate()
 
 
 //触发隐藏  并二次绑定
-document.getElementsByClassName("trigger")[0].onclick = () => {
+domByClass("trigger")[0].onclick = () => {
     upDate()
     triggerAcitonfunc()
 }
@@ -83,12 +101,12 @@ document.getElementsByClassName("trigger")[0].onclick = () => {
 
 function triggerAcitonfunc() {
 
-    let parNodes = document.getElementsByClassName("zdy-item")
-    let changeButton = document.getElementById('wsmud_raid_left')
+    let parNodes = domByClass("zdy-item")
+    let changeButton = domById('wsmud_raid_left')
     changeButton.innerText = flagTiggerIsShow === true ? '精简列表' : '全部列表'
     changeButton.style.color = 'red'
 
-    document.getElementById('wsmud_raid_left').onclick = () => {
+    domById('wsmud_raid_left').onclick = () => {
         let a, b;
         if (flagTiggerIsShow === false) {
             a = 'none'
@@ -104,8 +122,8 @@ function triggerAcitonfunc() {
                 }
             }
         }
-        if (document.getElementById('wsmud_raid_left')) {
-            document.getElementById('wsmud_raid_left').innerText = b
+        if (domById('wsmud_raid_left')) {
+            domById('wsmud_raid_left').innerText = b
             flagTiggerIsShow = !flagTiggerIsShow
         }
     }
@@ -119,7 +137,7 @@ function triggerAcitonfunc() {
         }
     }
     //为所有触发绑定点击,画面重绘
-    let triggerItems = document.getElementsByClassName("breakText")
+    let triggerItems = domByClass("breakText")
     for (let i = 0; i < triggerItems.length; i++) {
         triggerItems[i].onclick = () => {
             triggerAcitonfunc()
@@ -130,10 +148,10 @@ function triggerAcitonfunc() {
 
 //region
 //添加按钮 添加弹窗
-document.getElementsByClassName('raidToolbar')[0].insertAdjacentHTML("beforeend", '<span style="cursor:pointer;" class="raid-item boardSetButton"><hio>设置</hio></span>')
-let boardSetButton = document.getElementsByClassName('boardSetButton')[0]
+domByClass('raidToolbar')[0].insertAdjacentHTML("beforeend", '<span style="cursor:pointer;" class="raid-item boardSetButton"><hio>设置</hio></span>')
+let boardSetButton = domByClass('boardSetButton')[0]
 
-document.getElementsByClassName('container')[0].insertAdjacentHTML("beforeend",
+domByClass('container')[0].insertAdjacentHTML("beforeend",
     '<div class="boardSet" style="z-index: 99999;  overflow:scroll;background-color: #bfa; position:absolute;height: 60%;margin: auto;width: 90%;bottom: 20%;left: 10%;flex-flow: column nowrap;display: flex;align-items: center;text-align: center;' +
     'border: 2px solid #0000ff;display: none">' +
     '   <div class="cancelButton" style="text-align: center;cursor: pointer; line-height: 20px; float:right;padding:20px 20px 0 0; color: black;font-size: 15px;">X</div>' +
@@ -169,32 +187,32 @@ document.getElementsByClassName('container')[0].insertAdjacentHTML("beforeend",
     '</div>')
 //endregion
 
-document.getElementsByClassName('textHide')[0].value = localStorage.getItem(roleid + "_" + "hideTrigger") ? localStorage.getItem(roleid + "_" + "hideTrigger").slice(1, localStorage.getItem(roleid + "_" + "hideTrigger").length - 1) : '橙开始,橙结束,橙目标,橙翻车'
-document.getElementsByClassName('textPanelMianban')[0].value = localStorage.getItem(roleid + "_" + "textPanel") ? localStorage.getItem(roleid + "_" + "textPanel").slice(1, localStorage.getItem(roleid + "_" + "textPanel").length - 1) : '冲冲冲!,20出1,来打架!,告辞!,下了下了,老子来了!'
+domByClass('textHide')[0].value = lSGet(roleid + "_hideTrigger") ? lSGet(roleid + "_hideTrigger").slice(1, lSGet(roleid + "_hideTrigger").length - 1) : '橙开始,橙结束,橙目标,橙翻车'
+domByClass('textPanelMianban')[0].value = lSGet(roleid + "_textPanel") ? lSGet(roleid + "_textPanel").slice(1, lSGet(roleid + "_textPanel").length - 1) : '冲冲冲!,20出1,来打架!,告辞!,下了下了,老子来了!'
 
 boardSetButton.onclick = () => {
-    document.getElementsByClassName('boardSet')[0].style.display = ''
+    domByClass('boardSet')[0].style.display = ''
 }
 
 //弹窗的js
-//取消
-document.getElementsByClassName('cancelButton')[0].onclick = () => {
-    document.getElementsByClassName('boardSet')[0].style.display = 'none'
+//面板按钮取消
+domByClass('cancelButton')[0].onclick = () => {
+    domByClass('boardSet')[0].style.display = 'none'
 }
-//取消
-document.getElementsByClassName('cancelButton')[1].onclick = () => {
-    document.getElementsByClassName('boardSet')[0].style.display = 'none'
+//面板按钮取消
+domByClass('cancelButton')[1].onclick = () => {
+    domByClass('boardSet')[0].style.display = 'none'
 }
-//取消
-document.getElementsByClassName('cancelButton')[2].onclick = () => {
-    document.getElementsByClassName('boardSet')[0].style.display = 'none'
+//面板按钮取消
+domByClass('cancelButton')[2].onclick = () => {
+    domByClass('boardSet')[0].style.display = 'none'
 }
 //确定 //保存到本地 //更新现场数据
-document.getElementsByClassName('readyAllButton')[0].onclick = () => {
-    localStorage.setItem(roleid + "_" + "hideTrigger", '"' + document.getElementsByClassName('textHide')[0].value + '"');
-    localStorage.setItem(roleid + "_" + "textPanel", '"' + document.getElementsByClassName('textPanelMianban')[0].value + '"');
+domByClass('readyAllButton')[0].onclick = () => {
+    lSSet(roleid + "_hideTrigger", '"' + domByClass('textHide')[0].value + '"');
+    lSSet(roleid + "_textPanel", '"' + domByClass('textPanelMianban')[0].value + '"');
     upDate()
-    document.getElementsByClassName('boardSet')[0].style.display = 'none'
+    domByClass('boardSet')[0].style.display = 'none'
     //更新聊天信息现场
     addPanelHTML()
 }
@@ -203,10 +221,10 @@ document.getElementsByClassName('readyAllButton')[0].onclick = () => {
 //面板整体
 
 //添加面板按钮
-document.getElementsByClassName("right-bar")[0].insertAdjacentHTML("beforeend", '<span  class="tool-item boardButton" style="opacity: 1; color: deeppink"><span class="glyphicon glyphicon-cog  tool-icon">,</span> <span cass="tool-text">面板</span> </span>');
+domByClass("right-bar")[0].insertAdjacentHTML("beforeend", '<span  class="tool-item boardButton" style="opacity: 1; color: deeppink"><span class="glyphicon glyphicon-cog  tool-icon">,</span> <span cass="tool-text">面板</span> </span>');
 //为按钮绑定隐藏
-document.getElementsByClassName('br-tool')[0].onclick = () => {
-    var dpy = document.getElementsByClassName("boardButton")[0].style
+domByClass('br-tool')[0].onclick = () => {
+    var dpy = domByClass("boardButton")[0].style
     if (dpy.display === 'none') {
         dpy.display = ''
     } else {
@@ -214,11 +232,11 @@ document.getElementsByClassName('br-tool')[0].onclick = () => {
     }
 }
 //绑定事件, 点击后动画离开
-document.getElementsByClassName("raidToolbar")[0].classList.add('mianBanBegin')
-document.getElementsByClassName("WG_log")[0].classList.add('mianBanBegin')
-document.getElementsByClassName("boardButton")[document.getElementsByClassName("boardButton").length - 1].onclick = function () {
-    let WG_log = document.getElementsByClassName("WG_log")[0]
-    let raidToolbar = document.getElementsByClassName("raidToolbar")[0]
+domByClass("raidToolbar")[0].classList.add('mianBanBegin')
+domByClass("WG_log")[0].classList.add('mianBanBegin')
+domByClass("boardButton")[domByClass("boardButton").length - 1].onclick = function () {
+    let WG_log = domByClass("WG_log")[0]
+    let raidToolbar = domByClass("raidToolbar")[0]
     if (WG_log.classList.contains('mianBanDown')) {
         //显示
         //删除类
@@ -249,15 +267,15 @@ document.getElementsByClassName("boardButton")[document.getElementsByClassName("
 }
 
 //展开颜色改变面板
-document.getElementsByClassName('openColorChange')[0].onclick = () => {
-    document.getElementsByClassName('colorAuto')[0].style.display = ''
+domByClass('openColorChange')[0].onclick = () => {
+    domByClass('colorAuto')[0].style.display = ''
 }
 
 //自定义颜色输入框获取
 function getColorInput() {
     var str = ''
     for (let i = 0; i < 21; i++) {
-        let tag = document.getElementById('color' + i).value
+        let tag = domById('color' + i).value
         if (tag != '' && tag.slice(0, 1) == '#' && (tag.length == 4 || tag.length == 7)) {
             str += '\n' + colorHtmlClass[i] + ' {\n color:' + tag + ';\n}'
         }
@@ -266,27 +284,27 @@ function getColorInput() {
 }
 
 //保存颜色变更到本地
-document.getElementsByClassName('saveColorChange')[0].onclick = () => {
-    localStorage.setItem(roleid + "_" + "colorChanged", '"' + getColorInput() + '"');
+domByClass('saveColorChange')[0].onclick = () => {
+    lSSet(roleid + "_colorChanged", '"' + getColorInput() + '"');
 }
 
 //恢复使用上次保存的颜色
-document.getElementsByClassName('useSevedColorChange')[0].onclick = () => {
-    if (localStorage.getItem(roleid + "_" + "colorChanged")) {
+domByClass('useSevedColorChange')[0].onclick = () => {
+    if (lSGet(roleid + "_colorChanged")) {
         var style = document.head.innerHTML
         var styleAddress = style.indexOf("</style>")
-        document.head.innerHTML = style.slice(0, styleAddress) + localStorage.getItem(roleid + "_" + "colorChanged").slice(1, localStorage.getItem(roleid + "_" + "colorChanged").length - 1) + style.slice(styleAddress)
+        document.head.innerHTML = style.slice(0, styleAddress) + lSGet(roleid + "_colorChanged").slice(1, lSGet(roleid + "_colorChanged").length - 1) + style.slice(styleAddress)
     } else {
         alert('没有记录')
     }
 }
 
 //自定义颜色确认的按钮
-document.getElementsByClassName('changeColorButton')[0].onclick = () => {
+domByClass('changeColorButton')[0].onclick = () => {
     var style = document.head.innerHTML
     var styleAddress = style.indexOf("</style>")
     document.head.innerHTML = style.slice(0, styleAddress) + getColorInput() + style.slice(styleAddress)
-    document.getElementsByClassName('boardSet')[0].style.display = 'none'
+    domByClass('boardSet')[0].style.display = 'none'
 }
 
 
@@ -320,11 +338,11 @@ function copyList(list) {
 
 
 //绑点击复制事件
-document.getElementsByClassName('startToCopy')[0].onclick = () => {
-    document.getElementsByClassName('boardSet')[0].style.display = 'none'
-    var channelList = document.getElementsByClassName('channel')[0].firstChild.childNodes
+domByClass('startToCopy')[0].onclick = () => {
+    domByClass('boardSet')[0].style.display = 'none'
+    var channelList = domByClass('channel')[0].firstChild.childNodes
     var contentMessageList =
-        document.getElementsByClassName('content-message')[0].lastChild
+        domByClass('content-message')[0].lastChild
 
     contentMessageList.onclick = (ev) => {
         //失效前一个函数
@@ -342,8 +360,8 @@ document.getElementsByClassName('startToCopy')[0].onclick = () => {
 
 function addPanelHTML() {
     //清空旧HTML
-    if (document.getElementsByClassName('panelInfo').length > 1) {
-        document.getElementsByClassName('panelMianBan')[0].parentNode.removeChild(document.getElementsByClassName('panelMianBan')[0])
+    if (domByClass('panelInfo').length > 1) {
+        domByClass('panelMianBan')[0].parentNode.removeChild(domByClass('panelMianBan')[0])
     }
     var mindPanelReadyHTML = ''
     for (let i = 0; i < panelArr.length; i++) {
@@ -352,14 +370,14 @@ function addPanelHTML() {
     //加入HTML
     var panelHTML = '<div class="panelMianBan" style="display: flex;width: 100% ;height: auto;background-color: #717471;' +
         'flex-wrap: wrap;align-content: flex-start;">' + mindPanelReadyHTML + '</div>'
-    document.getElementsByClassName('chat-panel')[0].insertAdjacentHTML("beforeend", panelHTML)
+    domByClass('chat-panel')[0].insertAdjacentHTML("beforeend", panelHTML)
 
     //绑定事件
-    var allPanelHTML = document.getElementsByClassName('panelInfo')
+    var allPanelHTML = domByClass('panelInfo')
 
     for (let i = 0; i < allPanelHTML.length; i++) {
         allPanelHTML[i].onclick = () => {
-            document.getElementsByClassName('sender-box')[0].value = document.getElementsByClassName('sender-box')[0].value + '' + allPanelHTML[allPanelHTML[i].attributes.tag.value].innerHTML;
+            domByClass('sender-box')[0].value = domByClass('sender-box')[0].value + '' + allPanelHTML[allPanelHTML[i].attributes.tag.value].innerHTML;
             sendPanel()
         }
     }
@@ -370,7 +388,7 @@ addPanelHTML()
 
 //点击发送按键
 function sendPanel() {
-    document.getElementsByClassName('sender-btn')[0].click()
+    domByClass('sender-btn')[0].click()
 }
 
 
