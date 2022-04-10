@@ -1,10 +1,10 @@
 //角色ID
 const roleid = document.querySelectorAll(".role-list>.select")[0].attributes['roleid'].value;
 
-const v = "面板1.7更新内容:\n" +
+const v = "面板1.8更新内容:\n" +
     "        1. 所有配置支持云备份\n" +
-    "        2. 目前功能:复制,触发隐藏,面板隐藏,快捷发言,颜色自定义\n" +
-    "        3. 修改快捷发言,可以作为后缀在聊天框对的基础上添加并发送\n";
+    "        2. 目前功能:复制,触发隐藏,面板隐藏,快捷发言,颜色自定义(支持渐变)\n" +
+    "        3. 颜色自定义更新:自启动,渐变色,分享,保存\n";
 //class->dom
 function domByClass(cla){
     return document.getElementsByClassName(cla)
@@ -64,7 +64,8 @@ function autoColorHTML() {
     for (let i = 0; i < colorInfo.length; i++) {
         arr += '       <div style="display: flex;justify-content: center;align-items:center;margin-top: 5px;">' +
             '               <div style="color:' + colorInfo[i] + ';margin-right: 1%">本颜色改为:</div>' +
-            '               <input id="color' + i + '" type="text">' +
+            '               <input id="colorOne' + i + '" style="width:20%;" type="text">' +
+            '               <input id="colorTwo' + i + '" style="width:20%;" type="text">' +
             '       </div>'
     }
     return arr
@@ -84,9 +85,11 @@ var hidName
 //快捷发言所需
 var panelArr
 
+var tagColorUse
 function upDate() {
-    hidName = lSGet(roleid + "_hideTrigger") ? (lSGet(roleid + "_hideTrigger").slice(1, lSGet(roleid + "_hideTrigger").length - 1)).split(',') : [];
-    panelArr = lSGet(roleid + "_textPanel") ? (lSGet(roleid + "_textPanel").slice(1, lSGet(roleid + "_textPanel").length - 1)).split(',') : [];
+    hidName = lSGet(roleid + "_hideTrigger") ? JSON.parse(lSGet(roleid + "_hideTrigger")).split(',') : [];
+    panelArr = lSGet(roleid + "_textPanel") ? JSON.parse(lSGet(roleid + "_textPanel")).split(',') : [];
+    tagColorUse =  lSGet(roleid + "_tagColorUse") ? JSON.parse(lSGet(roleid + "_tagColorUse")) :false;
 }
 
 upDate()
@@ -152,7 +155,7 @@ domByClass('raidToolbar')[0].insertAdjacentHTML("beforeend", '<span style="curso
 let boardSetButton = domByClass('boardSetButton')[0]
 
 domByClass('container')[0].insertAdjacentHTML("beforeend",
-    '<div class="boardSet" style="z-index: 99999;  overflow:scroll;background-color: #bfa; position:absolute;height: 60%;margin: auto;width: 90%;bottom: 20%;left: 10%;flex-flow: column nowrap;display: flex;align-items: center;text-align: center;' +
+    '<div class="boardSet" style="z-index: 99999;  overflow:scroll;background-color: #bfa; position:absolute;height: 80%;margin: auto;width: 100%;bottom: 10%;left: 0%;flex-flow: column nowrap;display: flex;align-items: center;text-align: center;' +
     'border: 2px solid #0000ff;display: none">' +
     '   <div class="cancelButton" style="text-align: center;cursor: pointer; line-height: 20px; float:right;padding:20px 20px 0 0; color: black;font-size: 15px;">X</div>' +
     '   <h3>设置面板1.7 ' +
@@ -160,8 +163,8 @@ domByClass('container')[0].insertAdjacentHTML("beforeend",
     '   </h3>' +
     '   <h4>如果你有好的想法和建议,欢迎在仙界群@与風</h4>' +
     '   <div>' +
-    '       <p style="color:darkblue;"> 消息复制功能:</p>' +
-    '       <p style="color:darkblue;"> 解决app无法复制消息的问题,可复制提示内容,发言,为提高体验,减少消耗,每点一次启动:每条消息都会获得一次复制机会,简单来说:点击启动,然后点击你要复制的消息</p>' +
+    '       <h4 style="color:darkblue;"> 消息复制功能:</h4>' +
+    '       <p style="color:darkblue;">点击启动,然后点击你要复制的消息即可复制到粘贴板</p>' +
     '       <span class="startToCopy" style="color: red;border: 1px solid cornflowerblue;background-color: cornflowerblue;cursor:pointer; padding: 5px 10px">启动</span>' +
     '   </div>' +
     '   <div style="width:100%;margin:5% 0;border-top: 1px solid coral;"></div>' +
@@ -174,21 +177,27 @@ domByClass('container')[0].insertAdjacentHTML("beforeend",
     '       <div class="cancelButton" style="border: 1px solid greenyellow;margin-top:20px;right:20px;margin-right: 10px;width: 50px;line-height:30px;height: 30px;background-color: deeppink;cursor:pointer; ">取消</div>' +
     '   </div>' +
     '   <h3 class="openColorChange">颜色自定义功能(点击展开)</h3>' +
-    '   <p>仅支持4位或7位16进制颜色,如:#FFFFFF 具体请百度(颜色不变说明写的有问题哦)</p>' +
+    '   <p>1. 支持RGB,16进制,英文颜色等多种格式,具体颜色值请百度(颜色不变说明写的有问题)</p>' +
+    '   <p>2. 若不使用渐变:只要在第一个输入框填写颜色,若使用:分别在第一,第二个输入框填写颜色</p>' +
+    '   <p class="buttonColorTag">点此 开启/关闭自启动 当前状态: <p class="buttonColorTagShow" style="color:red;">关</p> </p>' +
     '   <div class="colorAuto" style="display: none;margin-bottom: 20%;background-color: #000000">' +
     autoColorHTML() +
     '       <div style="display: flex;justify-content: center;align-items:center;margin-top: 5px;">' +
-    '           <div class="changeColorButton" style="background-color: cornflowerblue;margin:5%; border: 1px solid greenyellow;width: auto;line-height:30px;height: 30px;cursor:pointer;">确认</div>' +
-    '           <div class="cancelButton" style="border: 1px solid greenyellow;margin:5%;width: auto;line-height:30px;height: 30px;background-color: deeppink;cursor:pointer; ">取消</div>' +
-    '           <div class="saveColorChange" style="border: 1px solid greenyellow;margin:5%;width: auto;line-height:30px;height: 30px;background-color: deeppink;cursor:pointer; ">保存</div>' +
-    '           <div class="useSevedColorChange" style="border: 1px solid greenyellow;margin:5%;width: auto;line-height:30px;height: 30px;background-color: deeppink;cursor:pointer; ">使用已保存</div>' +
+    '           <div class="changeColorButton" style="background-color: cornflowerblue;margin:2%; border: 1px solid greenyellow;width: auto;line-height:30px;height: 30px;cursor:pointer;">确认并使用</div>' +
+    '           <div class="cancelButton" style="border: 1px solid greenyellow;margin:2%;width: auto;line-height:30px;height: 30px;background-color: deeppink;cursor:pointer; ">取消</div>' +
+    '           <div class="saveColorChange" style="border: 1px solid greenyellow;margin:2%;width: auto;line-height:30px;height: 30px;background-color: deeppink;cursor:pointer; ">仅保存</div>' +
+    '       </div>' +
+    '       <div style="display: flex;justify-content: center;align-items:center;margin-top: 5px;">' +
+    '           <div class="useSevedColorChange" style="border: 1px solid greenyellow;margin:2%;width: auto;line-height:30px;height: 30px;background-color: deeppink;cursor:pointer; ">使用已保存</div>' +
+    '           <div class="shareColorClass" style="border: 1px solid greenyellow;margin:2%;width: auto;line-height:30px;height: 30px;background-color: deeppink;cursor:pointer; ">分享已保存</div>' +
+    '           <div class="addColorClass" style="border: 1px solid greenyellow;margin:2%;width: auto;line-height:30px;height: 30px;background-color: deeppink;cursor:pointer; ">导入保存并使用</div>' +
     '       </div>' +
     '   </div>' +
     '</div>')
 //endregion
 
-domByClass('textHide')[0].value = lSGet(roleid + "_hideTrigger") ? lSGet(roleid + "_hideTrigger").slice(1, lSGet(roleid + "_hideTrigger").length - 1) : '橙开始,橙结束,橙目标,橙翻车'
-domByClass('textPanelMianban')[0].value = lSGet(roleid + "_textPanel") ? lSGet(roleid + "_textPanel").slice(1, lSGet(roleid + "_textPanel").length - 1) : '冲冲冲!,20出1,来打架!,告辞!,下了下了,老子来了!'
+domByClass('textHide')[0].value = lSGet(roleid + "_hideTrigger") ? JSON.parse( lSGet(roleid + "_hideTrigger")) : '橙开始,橙结束,橙目标,橙翻车'
+domByClass('textPanelMianban')[0].value = lSGet(roleid + "_textPanel") ? JSON.parse(lSGet(roleid + "_textPanel")) : '冲冲冲!,20出1,来打架!,告辞!,下了下了,老子来了!'
 
 boardSetButton.onclick = () => {
     domByClass('boardSet')[0].style.display = ''
@@ -209,8 +218,8 @@ domByClass('cancelButton')[2].onclick = () => {
 }
 //确定 //保存到本地 //更新现场数据
 domByClass('readyAllButton')[0].onclick = () => {
-    lSSet(roleid + "_hideTrigger", '"' + domByClass('textHide')[0].value + '"');
-    lSSet(roleid + "_textPanel", '"' + domByClass('textPanelMianban')[0].value + '"');
+    lSSet(roleid + "_hideTrigger", JSON.stringify(domByClass('textHide')[0].value));
+    lSSet(roleid + "_textPanel", JSON.stringify(domByClass('textPanelMianban')[0].value));
     upDate()
     domByClass('boardSet')[0].style.display = 'none'
     //更新聊天信息现场
@@ -275,9 +284,14 @@ domByClass('openColorChange')[0].onclick = () => {
 function getColorInput() {
     var str = ''
     for (let i = 0; i < 21; i++) {
-        let tag = domById('color' + i).value
-        if (tag != '' && tag.slice(0, 1) == '#' && (tag.length == 4 || tag.length == 7)) {
-            str += '\n' + colorHtmlClass[i] + ' {\n color:' + tag + ';\n}'
+        let tag1 = domById('colorOne' + i).value
+        let tag2 = domById('colorTwo' + i).value
+        if (tag1 != '') {
+            if (tag2==''){
+                str += '\n' + colorHtmlClass[i] + ' {color:' + tag1 + ';}'
+            }else{
+                str += '\n' + colorHtmlClass[i] + ' {background: linear-gradient(to right, '+tag1+', '+tag2+');-webkit-background-clip: text; color: transparent;}'
+            }
         }
     }
     return str
@@ -285,19 +299,25 @@ function getColorInput() {
 
 //保存颜色变更到本地
 domByClass('saveColorChange')[0].onclick = () => {
-    lSSet(roleid + "_colorChanged", '"' + getColorInput() + '"');
+    lSSet(roleid + "_colorChanged", JSON.stringify(getColorInput()));
 }
 
 //恢复使用上次保存的颜色
 domByClass('useSevedColorChange')[0].onclick = () => {
+    onloadToColor()
+}
+
+//回复颜色使用
+function onloadToColor(){
     if (lSGet(roleid + "_colorChanged")) {
         var style = document.head.innerHTML
         var styleAddress = style.indexOf("</style>")
-        document.head.innerHTML = style.slice(0, styleAddress) + lSGet(roleid + "_colorChanged").slice(1, lSGet(roleid + "_colorChanged").length - 1) + style.slice(styleAddress)
+        document.head.innerHTML = style.slice(0, styleAddress) + JSON.parse(lSGet(roleid + "_colorChanged")) + style.slice(styleAddress)
     } else {
-        alert('没有记录')
+        alert('没有自定义记录')
     }
 }
+
 
 //自定义颜色确认的按钮
 domByClass('changeColorButton')[0].onclick = () => {
@@ -307,6 +327,50 @@ domByClass('changeColorButton')[0].onclick = () => {
     domByClass('boardSet')[0].style.display = 'none'
 }
 
+//分享自定义颜色格式的按钮
+domByClass("shareColorClass")[0].onclick = ()=>{
+    copyAgain()
+    alert("已复制到粘贴板")
+}
+//分享按钮二次绑定
+function copyAgain(){
+    copy(JSON.parse(lSGet(roleid + "_colorChanged")))
+    domByClass("shareColorClass")[0].onclick = ()=>{
+        copyAgain()
+        alert("已复制到粘贴板")
+    }
+}
+
+//导入自定义颜色 保存并使用
+domByClass("addColorClass")[0].onclick = ()=>{
+   let colorInfo = prompt("请输入被分享的颜色:");
+   if (colorInfo==null){
+       alert("取消导入")
+       return
+   }
+    lSSet(roleid + "_colorChanged", JSON.stringify(colorInfo))
+    var style = document.head.innerHTML
+    var styleAddress = style.indexOf("</style>")
+    document.head.innerHTML = style.slice(0, styleAddress) +colorInfo + style.slice(styleAddress)
+    domByClass('boardSet')[0].style.display = 'none'
+}
+
+//自定义颜色自启动切换按钮
+domByClass("buttonColorTag")[0].onclick = ()=>{
+    lSSet(roleid + "_tagColorUse", JSON.stringify(!tagColorUse));
+    tagColorUse  = !tagColorUse
+    useOldColor()
+}
+//自定义颜色自启动状态切换
+function useOldColor() {
+    if (tagColorUse===true){
+        domByClass("buttonColorTagShow")[0].innerText = "开"
+        onloadToColor()
+    }else {
+        domByClass("buttonColorTagShow")[0].innerText = "关"
+    }
+}
+useOldColor()
 
 //复制函数
 function copy(str) {
@@ -325,8 +389,7 @@ function copy(str) {
 function copyList(list) {
     if (list.length > 0) {
         for (let j = 0; j < list.length; j++) {
-            list[j].addEventListener('click', function () {
-            });
+            list[j].addEventListener('click', function () {});
             list[j].onclick = (ev) => {
                 //失效前一个函数
                 ev.target.onclick != null ? '' : ev.target.onclick = null
