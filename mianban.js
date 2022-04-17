@@ -1,10 +1,11 @@
 //角色ID
 const roleid = document.querySelectorAll(".role-list>.select")[0].attributes['roleid'].value;
 
-const v = "面板1.8更新内容:\n" +
+const v = "面板1.9更新内容:\n" +
     "        1. 所有配置支持云备份\n" +
-    "        2. 目前功能:复制,触发隐藏,面板隐藏,快捷发言,颜色自定义(支持渐变)\n" +
-    "        3. 颜色自定义更新:自启动,渐变色,分享,保存\n";
+    "        2. 目前功能:复制,触发隐藏,面板隐藏,快捷发言,颜色自定义(支持渐变),缓存清理\n" +
+    "        3. 颜色自定义更新:自启动,渐变色,分享,保存\n"+
+    "        4. 无需重启清理缓存以减少卡顿的功能\n"
 //class->dom
 function domByClass(cla){
     return document.getElementsByClassName(cla)
@@ -163,9 +164,14 @@ domByClass('container')[0].insertAdjacentHTML("beforeend",
     '   </h3>' +
     '   <h4>如果你有好的想法和建议,欢迎在仙界群@与風</h4>' +
     '   <div>' +
-    '       <h4 style="color:darkblue;"> 消息复制功能:</h4>' +
+    '       <h4 style="color:darkblue;"> 消息复制功能</h4>' +
     '       <p style="color:darkblue;">点击启动,然后点击你要复制的消息即可复制到粘贴板</p>' +
     '       <span class="startToCopy" style="color: red;border: 1px solid cornflowerblue;background-color: cornflowerblue;cursor:pointer; padding: 5px 10px">启动</span>' +
+    '   </div>' +
+    '   <div>' +
+    '       <h4 style="color:darkblue;">内存清理</h4>' +
+    '       <p style="color:darkblue;">定时清理聊天与提示信息的缓存，不必重启减轻卡顿</p>' +
+    '       <span class="startClearMsg" style="color: red;border: 1px solid cornflowerblue;background-color: cornflowerblue;cursor:pointer; padding: 5px 10px">启动</span>' +
     '   </div>' +
     '   <div style="width:100%;margin:5% 0;border-top: 1px solid coral;"></div>' +
     '   <p>请在下面输入要隐藏的触发名称,使用英文符号","分隔</p>' +
@@ -224,6 +230,7 @@ domByClass('readyAllButton')[0].onclick = () => {
     domByClass('boardSet')[0].style.display = 'none'
     //更新聊天信息现场
     addPanelHTML()
+    layer.msg(`已保存`)
 }
 
 
@@ -300,11 +307,13 @@ function getColorInput() {
 //保存颜色变更到本地
 domByClass('saveColorChange')[0].onclick = () => {
     lSSet(roleid + "_colorChanged", JSON.stringify(getColorInput()));
+    layer.msg(`保存成功`)
 }
 
 //恢复使用上次保存的颜色
 domByClass('useSevedColorChange')[0].onclick = () => {
     onloadToColor()
+    layer.msg(`恢复成功`)
 }
 
 //回复颜色使用
@@ -314,7 +323,7 @@ function onloadToColor(){
         var styleAddress = style.indexOf("</style>")
         document.head.innerHTML = style.slice(0, styleAddress) + JSON.parse(lSGet(roleid + "_colorChanged")) + style.slice(styleAddress)
     } else {
-        alert('没有自定义记录')
+        layer.msg('没有自定义记录')
     }
 }
 
@@ -325,19 +334,19 @@ domByClass('changeColorButton')[0].onclick = () => {
     var styleAddress = style.indexOf("</style>")
     document.head.innerHTML = style.slice(0, styleAddress) + getColorInput() + style.slice(styleAddress)
     domByClass('boardSet')[0].style.display = 'none'
+    layer.msg(`使用成功`)
 }
 
 //分享自定义颜色格式的按钮
 domByClass("shareColorClass")[0].onclick = ()=>{
     copyAgain()
-    alert("已复制到粘贴板")
+    layer.msg("已复制到粘贴板")
 }
 //分享按钮二次绑定
 function copyAgain(){
     copy(JSON.parse(lSGet(roleid + "_colorChanged")))
     domByClass("shareColorClass")[0].onclick = ()=>{
         copyAgain()
-        alert("已复制到粘贴板")
     }
 }
 
@@ -345,7 +354,7 @@ function copyAgain(){
 domByClass("addColorClass")[0].onclick = ()=>{
    let colorInfo = prompt("请输入被分享的颜色:");
    if (colorInfo==null){
-       alert("取消导入")
+       layer.msg("取消导入")
        return
    }
     lSSet(roleid + "_colorChanged", JSON.stringify(colorInfo))
@@ -353,6 +362,7 @@ domByClass("addColorClass")[0].onclick = ()=>{
     var styleAddress = style.indexOf("</style>")
     document.head.innerHTML = style.slice(0, styleAddress) +colorInfo + style.slice(styleAddress)
     domByClass('boardSet')[0].style.display = 'none'
+    layer.msg(`导入成功`)
 }
 
 //自定义颜色自启动切换按钮
@@ -360,9 +370,11 @@ domByClass("buttonColorTag")[0].onclick = ()=>{
     lSSet(roleid + "_tagColorUse", JSON.stringify(!tagColorUse));
     tagColorUse  = !tagColorUse
     useOldColor()
+    layer.msg("已切换")
 }
 //自定义颜色自启动状态切换
 function useOldColor() {
+
     if (tagColorUse===true){
         domByClass("buttonColorTagShow")[0].innerText = "开"
         onloadToColor()
@@ -371,6 +383,52 @@ function useOldColor() {
     }
 }
 useOldColor()
+
+//清理聊天缓存
+var intervalTag
+domByClass("startClearMsg")[0].onclick = ()=>{
+    clearMsgMiddle()
+}
+//清理聊天中继
+function clearMsgMiddle(){
+    if(domByClass("startClearMsg")[0].innerText ==="启动"){
+        domByClass('boardSet')[0].style.display = 'none'
+        let t = prompt("请输入清理间隔时间(毫秒):");
+        if (t==null){
+            layer.msg("取消")
+            return
+        }
+        ClearMsg(t)
+        domByClass("startClearMsg")[0].innerText = "关闭"
+        layer.msg("已启动")
+    }else {
+        clearInterval(intervalTag)
+        domByClass("startClearMsg")[0].innerText = "启动"
+        layer.msg("已关闭")
+    }
+}
+
+
+////清理聊天缓存函数
+function ClearMsg(t){
+    let a,b
+    intervalTag = setInterval(function () {
+        if(domByClass("content-message")[0].childNodes[1] == undefined){
+            a = domByClass("content-message")[0].childNodes[0].childNodes.length
+            domByClass("content-message")[0].childNodes[0].innerHTML = ''
+        }else{
+            a = domByClass("content-message")[0].childNodes[1].childNodes.length
+            domByClass("content-message")[0].childNodes[1].innerHTML = ''
+        }
+        b = domByClass("channel")[0].childNodes[0].childNodes.length
+        domByClass("channel")[0].childNodes[0].innerHTML = ''
+        layer.msg(`清理聊天记录节点${b}个，提示信息节点${a}个`)
+    },t)
+    domByClass("startClearMsg")[0].onclick = ()=>{
+        clearMsgMiddle()
+    }
+}
+
 
 //复制函数
 function copy(str) {
@@ -382,7 +440,9 @@ function copy(str) {
     };
     document.addEventListener('copy', save);
     console.log(str)
+    layer.msg(`复制成功`)
     return document.execCommand("copy");//使文档处于可编辑状态，否则无效
+
 }
 
 //实际事件函数
@@ -411,6 +471,7 @@ domByClass('startToCopy')[0].onclick = () => {
         //失效前一个函数
         ev.target.onclick != null ? '' : ev.target.onclick = null
         copy(contentMessageList.innerText)
+
     }
 //复制聊天记录
     copyList(channelList)
