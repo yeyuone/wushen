@@ -156,21 +156,21 @@ domByClass('raidToolbar')[0].insertAdjacentHTML("beforeend", '<span style="curso
 let boardSetButton = domByClass('boardSetButton')[0]
 
 domByClass('container')[0].insertAdjacentHTML("beforeend",
-    '<div class="boardSet" style="z-index: 99999;  overflow:scroll;background-color: #bfa; position:absolute;height: 80%;margin: auto;width: 100%;bottom: 10%;left: 0%;flex-flow: column nowrap;display: flex;align-items: center;text-align: center;' +
+    '<div class="boardSet" style="z-index: 99999;  overflow:scroll;background-color: #000000; position:absolute;height: 80%;margin: auto;width: 100%;bottom: 10%;left: 0%;flex-flow: column nowrap;display: flex;align-items: center;text-align: center;' +
     'border: 2px solid #0000ff;display: none">' +
-    '   <div class="cancelButton" style="text-align: center;cursor: pointer; line-height: 20px; float:right;padding:20px 20px 0 0; color: black;font-size: 15px;">X</div>' +
-    '   <h3>设置面板1.7 ' +
+    '   <div class="cancelButton" style="text-align: center;cursor: pointer; line-height: 20px; float:right;padding:20px 20px 0 0; font-size: 15px;">X</div>' +
+    '   <h3>设置面板1.9 ' +
     '       <span style="font-size: 10px">by 与風</span>' +
     '   </h3>' +
     '   <h4>如果你有好的想法和建议,欢迎在仙界群@与風</h4>' +
     '   <div>' +
-    '       <h4 style="color:darkblue;"> 消息复制功能</h4>' +
-    '       <p style="color:darkblue;">点击启动,然后点击你要复制的消息即可复制到粘贴板</p>' +
+    '       <h4> 消息复制功能</h4>' +
+    '       <p >点击启动,然后点击你要复制的消息即可复制到粘贴板</p>' +
     '       <span class="startToCopy" style="color: red;border: 1px solid cornflowerblue;background-color: cornflowerblue;cursor:pointer; padding: 5px 10px">启动</span>' +
     '   </div>' +
     '   <div>' +
-    '       <h4 style="color:darkblue;">内存清理</h4>' +
-    '       <p style="color:darkblue;">定时清理聊天与提示信息的缓存，不必重启减轻卡顿</p>' +
+    '       <h4>内存清理</h4>' +
+    '       <p >定时清理聊天与提示信息的缓存，不必重启减轻卡顿</p>' +
     '       <span class="startClearMsg" style="color: red;border: 1px solid cornflowerblue;background-color: cornflowerblue;cursor:pointer; padding: 5px 10px">启动</span>' +
     '   </div>' +
     '   <div style="width:100%;margin:5% 0;border-top: 1px solid coral;"></div>' +
