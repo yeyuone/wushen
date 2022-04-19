@@ -1,11 +1,11 @@
 //角色ID
 const roleid = document.querySelectorAll(".role-list>.select")[0].attributes['roleid'].value;
 
-const v = "面板1.9更新内容:\n" +
+const v = "面板1.9.1更新内容:\n" +
     "        1. 所有配置支持云备份\n" +
     "        2. 目前功能:复制,触发隐藏,面板隐藏,快捷发言,颜色自定义(支持渐变),缓存清理\n" +
     "        3. 颜色自定义更新:自启动,渐变色,分享,保存\n"+
-    "        4. 无需重启清理缓存以减少卡顿的功能\n"
+    "        4. 无需重启清理缓存以减少卡顿的功能,支持自启动\n"
 //class->dom
 function domByClass(cla){
     return document.getElementsByClassName(cla)
@@ -87,10 +87,13 @@ var hidName
 var panelArr
 
 var tagColorUse
+var UseClearMsg
 function upDate() {
     hidName = lSGet(roleid + "_hideTrigger") ? JSON.parse(lSGet(roleid + "_hideTrigger")).split(',') : [];
     panelArr = lSGet(roleid + "_textPanel") ? JSON.parse(lSGet(roleid + "_textPanel")).split(',') : [];
     tagColorUse =  lSGet(roleid + "_tagColorUse") ? JSON.parse(lSGet(roleid + "_tagColorUse")) :false;
+    UseClearMsg = lSGet(roleid + "_UseClearMsg") ? JSON.parse(lSGet(roleid + "_UseClearMsg")) :false;
+    UseClearMsgTime = lSGet(roleid + "_UseClearMsgTime") ? JSON.parse(lSGet(roleid + "_UseClearMsgTime")) :100000;
 }
 
 upDate()
@@ -159,7 +162,7 @@ domByClass('container')[0].insertAdjacentHTML("beforeend",
     '<div class="boardSet" style="z-index: 99999;  overflow:scroll;background-color: #000000; position:absolute;height: 80%;margin: auto;width: 100%;bottom: 10%;left: 0%;flex-flow: column nowrap;display: flex;align-items: center;text-align: center;' +
     'border: 2px solid #0000ff;display: none">' +
     '   <div class="cancelButton" style="text-align: center;cursor: pointer; line-height: 20px; float:right;padding:20px 20px 0 0; font-size: 15px;">X</div>' +
-    '   <h3>设置面板1.9 ' +
+    '   <h3>设置面板1.9.1 ' +
     '       <span style="font-size: 10px">by 与風</span>' +
     '   </h3>' +
     '   <h4>如果你有好的想法和建议,欢迎在仙界群@与風</h4>' +
@@ -170,7 +173,7 @@ domByClass('container')[0].insertAdjacentHTML("beforeend",
     '   </div>' +
     '   <div>' +
     '       <h4>内存清理</h4>' +
-    '       <p >定时清理聊天与提示信息的缓存，不必重启减轻卡顿</p>' +
+    '       <p >定时清理聊天与提示信息的缓存，不必重启减轻卡顿,支持云备份自启动</p>' +
     '       <span class="startClearMsg" style="color: red;border: 1px solid cornflowerblue;background-color: cornflowerblue;cursor:pointer; padding: 5px 10px">启动</span>' +
     '   </div>' +
     '   <div style="width:100%;margin:5% 0;border-top: 1px solid coral;"></div>' +
@@ -387,6 +390,8 @@ useOldColor()
 //清理聊天缓存
 var intervalTag
 domByClass("startClearMsg")[0].onclick = ()=>{
+    roleid + "_UseClearMsg"
+    lSSet( roleid + "_UseClearMsg", JSON.stringify(true));
     clearMsgMiddle()
 }
 //清理聊天中继
@@ -398,15 +403,19 @@ function clearMsgMiddle(){
             layer.msg("取消")
             return
         }
+        lSSet( roleid + "_UseClearMsgTime", JSON.stringify(t));
         ClearMsg(t)
         domByClass("startClearMsg")[0].innerText = "关闭"
         layer.msg("已启动")
     }else {
         clearInterval(intervalTag)
         domByClass("startClearMsg")[0].innerText = "启动"
+        lSSet( roleid + "_UseClearMsg", JSON.stringify(false));
         layer.msg("已关闭")
     }
 }
+
+
 
 
 ////清理聊天缓存函数
@@ -428,6 +437,9 @@ function ClearMsg(t){
         clearMsgMiddle()
     }
 }
+
+//检测自启动
+UseClearMsg?layer.msg(`清理聊天记录自启动,循环等待${UseClearMsgTime}毫秒`)&&ClearMsg(UseClearMsgTime):''
 
 
 //复制函数
