@@ -88,6 +88,7 @@ var panelArr
 
 var tagColorUse
 var UseClearMsg
+var UseClearMsgTime
 function upDate() {
     hidName = lSGet(roleid + "_hideTrigger") ? JSON.parse(lSGet(roleid + "_hideTrigger")).split(',') : [];
     panelArr = lSGet(roleid + "_textPanel") ? JSON.parse(lSGet(roleid + "_textPanel")).split(',') : [];
