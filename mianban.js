@@ -1,11 +1,11 @@
 //角色ID
 const roleid = document.querySelectorAll(".role-list>.select")[0].attributes['roleid'].value;
 
-const v = "面板1.9.1更新内容:\n" +
+const v = "面板1.9.2更新内容:\n" +
     "        1. 所有配置支持云备份\n" +
     "        2. 目前功能:复制,触发隐藏,面板隐藏,快捷发言,颜色自定义(支持渐变),缓存清理\n" +
     "        3. 颜色自定义更新:自启动,渐变色,分享,保存\n"+
-    "        4. 无需重启清理缓存以减少卡顿的功能,支持自启动\n"
+    "        4. 无需重启清理缓存以减少卡顿的功能,支持自启动,修复再次登录按钮显示小BUG\n"
 //class->dom
 function domByClass(cla){
     return document.getElementsByClassName(cla)
@@ -163,7 +163,7 @@ domByClass('container')[0].insertAdjacentHTML("beforeend",
     '<div class="boardSet" style="z-index: 99999;  overflow:scroll;background-color: #000000; position:absolute;height: 80%;margin: auto;width: 100%;bottom: 10%;left: 0%;flex-flow: column nowrap;display: flex;align-items: center;text-align: center;' +
     'border: 2px solid #0000ff;display: none">' +
     '   <div class="cancelButton" style="text-align: center;cursor: pointer; line-height: 20px; float:right;padding:20px 20px 0 0; font-size: 15px;">X</div>' +
-    '   <h3>设置面板1.9.1 ' +
+    '   <h3>设置面板1.9.2 ' +
     '       <span style="font-size: 10px">by 与風</span>' +
     '   </h3>' +
     '   <h4>如果你有好的想法和建议,欢迎在仙界群@与風</h4>' +
@@ -399,8 +399,8 @@ domByClass("startClearMsg")[0].onclick = ()=>{
 function clearMsgMiddle(){
     if(domByClass("startClearMsg")[0].innerText ==="启动"){
         domByClass('boardSet')[0].style.display = 'none'
-        let t = prompt("请输入清理间隔时间(毫秒):");
-        if (t==null){
+        let t = prompt("请输入清理间隔时间,不低于5000(毫秒):");
+        if (t==null||t<5000){
             layer.msg("取消")
             return
         }
@@ -441,7 +441,7 @@ function ClearMsg(t){
 
 //检测自启动
 UseClearMsg?layer.msg(`清理聊天记录自启动,循环等待${UseClearMsgTime}毫秒`)&&ClearMsg(UseClearMsgTime):''
-
+UseClearMsg?domByClass("startClearMsg")[0].innerText = "关闭":''
 
 //复制函数
 function copy(str) {
