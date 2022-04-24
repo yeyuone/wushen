@@ -4,7 +4,7 @@ const roleid = document.querySelectorAll(".role-list>.select")[0].attributes['ro
 const v = "面板2.0更新内容:\n" +
     "        1. 所有配置支持云备份\n" +
     "        2. 目前功能:复制,触发隐藏,面板隐藏,快捷发言,颜色自定义(可渐变),自启动缓存清理\n" +
-    "        3. 代码生成更新:生成触发/流程停止代码\n"+
+    "        3. 代码生成更新:生成触发/流程停止代码\n"
 //class->dom
 function domByClass(cla){
     return document.getElementsByClassName(cla)
