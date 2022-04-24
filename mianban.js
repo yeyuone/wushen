@@ -1,11 +1,10 @@
 //角色ID
 const roleid = document.querySelectorAll(".role-list>.select")[0].attributes['roleid'].value;
 
-const v = "面板1.9.2更新内容:\n" +
+const v = "面板2.0更新内容:\n" +
     "        1. 所有配置支持云备份\n" +
-    "        2. 目前功能:复制,触发隐藏,面板隐藏,快捷发言,颜色自定义(支持渐变),缓存清理\n" +
-    "        3. 颜色自定义更新:自启动,渐变色,分享,保存\n"+
-    "        4. 无需重启清理缓存以减少卡顿的功能,支持自启动,修复再次登录按钮显示小BUG\n"
+    "        2. 目前功能:复制,触发隐藏,面板隐藏,快捷发言,颜色自定义(可渐变),自启动缓存清理\n" +
+    "        3. 代码生成更新:生成触发/流程停止代码\n"+
 //class->dom
 function domByClass(cla){
     return document.getElementsByClassName(cla)
@@ -163,7 +162,7 @@ domByClass('container')[0].insertAdjacentHTML("beforeend",
     '<div class="boardSet" style="z-index: 99999;  overflow:scroll;background-color: #000000; position:absolute;height: 80%;margin: auto;width: 100%;bottom: 10%;left: 0%;flex-flow: column nowrap;display: flex;align-items: center;text-align: center;' +
     'border: 2px solid #0000ff;display: none">' +
     '   <div class="cancelButton" style="text-align: center;cursor: pointer; line-height: 20px; float:right;padding:20px 20px 0 0; font-size: 15px;">X</div>' +
-    '   <h3>设置面板1.9.2 ' +
+    '   <h3>设置面板2.0 ' +
     '       <span style="font-size: 10px">by 与風</span>' +
     '   </h3>' +
     '   <h4>如果你有好的想法和建议,欢迎在仙界群@与風</h4>' +
@@ -203,8 +202,39 @@ domByClass('container')[0].insertAdjacentHTML("beforeend",
     '           <div class="addColorClass" style="border: 1px solid greenyellow;margin:2%;width: auto;line-height:30px;height: 30px;background-color: deeppink;cursor:pointer; ">导入保存并使用</div>' +
     '       </div>' +
     '   </div>' +
+    '   <h3 class="codeProduceTitle" >快捷代码生成(点击展开)</h3>' +
+    '   <p>面向会写简单命令而不熟悉js的用户</p>' +
+    '   <div class="codeAuto"  style="display: none;margin-bottom: 20%;">' +
+    '           <div class="stopUsingFunc" style="background-color: cornflowerblue;margin:2%; border: 1px solid greenyellow;width: auto;line-height:30px;height: 30px;cursor:pointer;">判断触发或流程是否在运行,如果是则停止</div>' +
+    '   </div>' +
     '</div>')
 //endregion
+
+//代码生成
+//展开按钮
+domByClass('codeProduceTitle')[0].onclick = ()=>{
+    domByClass('codeAuto')[0].style.display = ''
+}
+
+//停止触发和流程代码
+domByClass('stopUsingFunc')[0].onclick = ()=>{
+    copyCodeFunc()
+}
+function copyCodeFunc(){
+    let t = prompt("请输触发或流程名:")
+    if (t==null){
+        layer.msg("输入不正确")
+        return
+    }
+    copy(`@js $(".customFlow")[0].click();$("div:contains('${t}').breakText")[0]?$("div:contains('${t}').breakText")[0].click():''`)
+    layer.msg("已复制到剪切板")
+    domByClass('boardSet')[0].style.display = 'none'
+    domByClass('stopUsingFunc')[0].onclick = ()=>{
+        copyCodeFunc()
+    }
+}
+
+
 
 domByClass('textHide')[0].value = lSGet(roleid + "_hideTrigger") ? JSON.parse( lSGet(roleid + "_hideTrigger")) : '橙开始,橙结束,橙目标,橙翻车'
 domByClass('textPanelMianban')[0].value = lSGet(roleid + "_textPanel") ? JSON.parse(lSGet(roleid + "_textPanel")) : '冲冲冲!,20出1,来打架!,告辞!,下了下了,老子来了!'
