@@ -1,25 +1,34 @@
 //角色ID
 const roleid = document.querySelectorAll(".role-list>.select")[0].attributes['roleid'].value;
 
-const v = "面板2.0更新内容:\n" +
+const v = "面板2.0.1更新内容:\n" +
     "        1. 所有配置支持云备份\n" +
-    "        2. 目前功能:复制,触发隐藏,面板隐藏,快捷发言,颜色自定义(可渐变),自启动缓存清理\n" +
-    "        3. 代码生成更新:生成触发/流程停止代码\n"
-//class->dom
+    "        2. 目前功能:复制,触发隐藏,面板隐藏,快捷发言,颜色自定义(可渐变),自启动缓存清理,代码生成\n" +
+    "        3. 代码生成更新:生成懒人自动换装触发\n"
+    //class->dom
 function domByClass(cla){
-    return document.getElementsByClassName(cla)
-}
+        return document.getElementsByClassName(cla)
+    }
 //id->Dom
 function domById(id){
     return document.getElementById(id)
 }
 //localStorage ->get
 function lSGet(key){
-  return  localStorage.getItem(key)
+    return  localStorage.getItem(key)
 }
 //localStorage->set
 function lSSet(key,val){
     return  localStorage.setItem(key,val)
+}
+//修改数据绑定change(vue)
+function InputEvenChange(htm,type,str){
+    let evt = document.createEvent("HTMLEvents");
+    htm.focus();
+    'input'===type? htm.setAttribute('value', str):htm.value = str;
+    evt.eventType = 'message';
+    evt.initEvent('input', false, true);
+    htm.dispatchEvent(evt);
 }
 
 //更新内容
@@ -162,7 +171,7 @@ domByClass('container')[0].insertAdjacentHTML("beforeend",
     '<div class="boardSet" style="z-index: 99999;  overflow:scroll;background-color: #000000; position:absolute;height: 80%;margin: auto;width: 100%;bottom: 10%;left: 0%;flex-flow: column nowrap;display: flex;align-items: center;text-align: center;' +
     'border: 2px solid #0000ff;display: none">' +
     '   <div class="cancelButton" style="text-align: center;cursor: pointer; line-height: 20px; float:right;padding:20px 20px 0 0; font-size: 15px;">X</div>' +
-    '   <h3>设置面板2.0 ' +
+    '   <h3>设置面板2.0.1 ' +
     '       <span style="font-size: 10px">by 与風</span>' +
     '   </h3>' +
     '   <h4>如果你有好的想法和建议,欢迎在仙界群@与風</h4>' +
@@ -205,7 +214,8 @@ domByClass('container')[0].insertAdjacentHTML("beforeend",
     '   <h3 class="codeProduceTitle" >快捷代码生成(点击展开)</h3>' +
     '   <p>面向会写简单命令而不熟悉js的用户</p>' +
     '   <div class="codeAuto"  style="display: none;margin-bottom: 20%;">' +
-    '           <div class="stopUsingFunc" style="background-color: cornflowerblue;margin:2%; border: 1px solid greenyellow;width: auto;line-height:30px;height: 30px;cursor:pointer;">判断触发或流程是否在运行,如果是则停止</div>' +
+    '           <div class="stopUsingFunc" style="color: red; background-color: cornflowerblue;margin:2%; border: 1px solid greenyellow;width: auto;line-height:30px;height: 30px;cursor:pointer;">判断触发或流程是否在运行,如果是则停止</div>' +
+    '           <div class="createTriggerSEQ" style="color: red; background-color: cornflowerblue;margin:2%; border: 1px solid greenyellow;width: auto;line-height:30px;height: 30px;cursor:pointer;">生成自动换练习套触发</div>' +
     '   </div>' +
     '</div>')
 //endregion
@@ -216,11 +226,11 @@ domByClass('codeProduceTitle')[0].onclick = ()=>{
     domByClass('codeAuto')[0].style.display = ''
 }
 
-//停止触发和流程代码
+//停止触发和流程   代码
 domByClass('stopUsingFunc')[0].onclick = ()=>{
-    copyCodeFunc()
+    copyCodeStopTriggerFunc()
 }
-function copyCodeFunc(){
+function copyCodeStopTriggerFunc(){
     let t = prompt("请输触发或流程名:")
     if (t==null){
         layer.msg("输入不正确")
@@ -230,9 +240,41 @@ function copyCodeFunc(){
     layer.msg("已复制到剪切板")
     domByClass('boardSet')[0].style.display = 'none'
     domByClass('stopUsingFunc')[0].onclick = ()=>{
-        copyCodeFunc()
+        copyCodeStopTriggerFunc()
     }
 }
+
+//  创建换装练习套触发
+domByClass('createTriggerSEQ')[0].onclick = ()=>{
+    createTriggerSEQ()
+}
+function createTriggerSEQ(){
+    let t = prompt("请输要创建的换悟性装的触发名:")
+    let b = prompt("请输你的悟性套的名字:")
+    let str = `@tip 你开始练习($jn)。
+    @js ($jn) = '(jn)'.slice(5,'(jn)'.length-6);\n@js ($jn) =  $("div.skill-item:contains('(jn)')").first().attr("skid");\nstopstate\n$eq ${b}\n@await 300\n$eqskill ${b}\n@await 500\n@off ${t}\nlianxi (jn)\n@await 1000\n
+@on ${t}`
+    if (t==null||b==null){
+        layer.msg("输入不正确")
+        return
+    }
+    $("span.raid-item.trigger:contains('触发')")[0].click()
+    $("div#wsmud_raid_right>span:contains('新建')")[0].click()
+    $("div#app>.zdy-item:contains('新提示信息')")[0].click()
+    //triggerName
+    InputEvenChange($("div#app>div>div>input")[0],'input',t)
+    //keyWord
+    InputEvenChange($("div#app>div>div>.zdy-item>input")[0],'input','你开始练习')
+    //code
+    InputEvenChange($("div#app>div>div>textarea.settingbox")[0],'textArea',str)
+    //save
+    $("div#app>div>#wsmud_raid_right>span:contains('保存')")[0].click()
+    domByClass('createTriggerSEQ')[0].onclick = ()=>{
+        createTriggerSEQ()
+    }
+    alert(`生成完成!你的触发名字为${t}`)
+}
+
 
 
 
@@ -386,11 +428,11 @@ function copyAgain(){
 
 //导入自定义颜色 保存并使用
 domByClass("addColorClass")[0].onclick = ()=>{
-   let colorInfo = prompt("请输入被分享的颜色:");
-   if (colorInfo==null){
-       layer.msg("取消导入")
-       return
-   }
+    let colorInfo = prompt("请输入被分享的颜色:");
+    if (colorInfo==null){
+        layer.msg("取消导入")
+        return
+    }
     lSSet(roleid + "_colorChanged", JSON.stringify(colorInfo))
     var style = document.head.innerHTML
     var styleAddress = style.indexOf("</style>")
